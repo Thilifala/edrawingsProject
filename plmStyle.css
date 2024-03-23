@@ -1,0 +1,9 @@
+.plm-panel{
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    border: 1px solid red;
+    height: 500px;
+    width: 200px;
+    z-index: 100;
+}
