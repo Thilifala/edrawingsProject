@@ -742,6 +742,7 @@ var eDwShowOnlyCmdg;
 var eDwCommandMgrg;
 var eDwUIComponentTreePlugin_g;
 var mDistLine_g;
+var extSelObj_g;
 
 
 var __extends = this && this.__extends || function () {
@@ -948,7 +949,6 @@ define("eDwUICompTreeHTMLGenerator", ["require", "exports", "eDwUIHTMLGenerator"
     }));
 define("eDwUIComponentTreePlugin", ["require", "exports", "eDwUICompTreeHTMLGenerator", "eDwSelObj", "eDwUIUtils", "eDwEvents", "utils", "jqutils", "eDwUIBasePlugin", "eDwUIShortcutMenu"], (function (require, exports, eDwUICompTreeHTMLGenerator, eDwSelObj, eDwUIUtils, eDwEvents, utils, jqutils, eDwUIBasePlugin_1, eDwUIShortcutMenu_1) {
         "use strict";
-        console.log(`plm test require: eDwUIComponentTreePlugin`)
 
         var eDwUIComponentTreePlugin = function (_super) {
             __extends(eDwUIComponentTreePlugin, _super);
@@ -6062,6 +6062,7 @@ define("eDwMeasureMgr", ["require", "exports", "eDwMeasureOperator"], (function 
             this.mViewer.OperatorMgr.unregisterCustomOperatorByID(this.mMeasureOp.OperatorID)
         };
         eDwMeasureMgr.prototype.addMarkup = function (iNewMarkupID) {
+            console.log(`PLM eDwMeasureMgr.addMarkup`)
             if (!this.mMarkupArray) {
                 this.mMarkupArray = []
             }
@@ -6110,6 +6111,7 @@ define("eDwMeasureMgr", ["require", "exports", "eDwMeasureOperator"], (function 
             this.mMeasureOp.setMeasureMode(iMode)
         };
         eDwMeasureMgr.prototype.setPointToPointMode = function (iEnable) {
+            console.log(`PLM eDwMeasureMgr.setPointToPointMode`)
             this.mMeasureOp.setPointToPointMode(iEnable)
         };
         eDwMeasureMgr.prototype.setMeasureDelta = function (iEnable) {
@@ -6122,12 +6124,14 @@ define("eDwMeasureMgr", ["require", "exports", "eDwMeasureOperator"], (function 
             this.mMeasureOp.clearMeasureEntities()
         };
         eDwMeasureMgr.prototype.highlightSelectEntityAt = function (idx) {
+            console.log(`PLM eDwMeasureMgr.highlightSelectEntityAt`)
             this.mMeasureOp.highlightEntityTempAt(idx)
         };
         eDwMeasureMgr.prototype.dehighlightAllSelectEntity = function () {
             this.mMeasureOp.dehighlightAllTemporaryEntity()
         };
         eDwMeasureMgr.prototype.updateResults = function () {
+            console.log(`PLM eDwMeasureMgr.updateResults`)
             this.mMeasureOp.updateMeasureResults(this.mViewer.getModel().getUserUnits())
         };
         return eDwMeasureMgr
@@ -6211,6 +6215,7 @@ define("eDwMeasureOperator", ["require", "exports", "eDwSelObj", "eDwBaseSelOper
             return __awaiter(this, void 0, void 0, (function () {
                 var pos, label, extSelObj, added, error_1;
                 return __generator(this, (function (_a) {
+                    // console.log('PLM Log：eDwMeasureOperator.onMouseMove')
                     switch (_a.label) {
                         case 0:
                             pos = ioEvent.getPosition();
@@ -6271,7 +6276,7 @@ define("eDwMeasureOperator", ["require", "exports", "eDwSelObj", "eDwBaseSelOper
             return __awaiter(this, void 0, void 0, (function () {
                 var pos, label;
                 return __generator(this, (function (_a) {
-                    console.log('PLM Log：eDwMeasureOperator.onMouseDown')
+                    console.log(`PLM Log：eDwMeasureOperator.onMouseDown:${_a.label}`)
                     switch (_a.label) {
                         case 0:
                             pos = ioEvent.getPosition();
@@ -6298,6 +6303,7 @@ define("eDwMeasureOperator", ["require", "exports", "eDwSelObj", "eDwBaseSelOper
             return __awaiter(this, void 0, void 0, (function () {
                 var extSelObj, idx, isAdded;
                 return __generator(this, (function (_a) {
+                    console.log(`PLM Log：eDwMeasureOperator.onMouseUp:${_a.label}`)
                     switch (_a.label) {
                         case 0:
                             if (this.mOperatingLabel) {
@@ -6311,6 +6317,7 @@ define("eDwMeasureOperator", ["require", "exports", "eDwSelObj", "eDwBaseSelOper
                             return [4, this.Viewer.ViewMgr.pickFromPoint(ioEvent.getPosition(), this.getPickConfig())];
                         case 1:
                             extSelObj = _a.sent();
+                            extSelObj_g = extSelObj;//plm Test
                             idx = this.mMeasureEntities.isItemSelected(extSelObj);
                             if (!(!eDwMeasureEntities.PointToPoint && utils.isNumber(idx))) return [3, 3];
                             return [4, this.mMeasureEntities.removeEntityAtIndex(idx)];
@@ -21736,7 +21743,6 @@ define("eDwUISheetTreeHTMLGenerator", ["require", "exports", "eDwUIHTMLGenerator
 }));
 define("eDwUIShortcutMenu", ["require", "exports", "eDwUIHTMLEventMgr", "eDwGenericError", "eDwEventMgr", "eDwEvents", "eDwUIUtils"], (function (require, exports, eDwUIHTMLEventMgr, eDwGenericError, eDwEventMgr, eDwEvents_9, eDwUIUtils) {
     "use strict";
-    console.log(`plm test require: eDwUIShortcutMenu`)
 
     Object.defineProperty(exports, "__esModule", {value: true});
     exports.eDwUIShortcutMenu = void 0;
@@ -24805,68 +24811,6 @@ define("utils", ["require", "exports"], (function (require, exports) {
 
 
 
-define("plmTestPlugin", ["require", "exports", "eDwTypes" ,"eDwCommandMgr", "eDwSetHierNodeAttribsCmd", "eDwShowOnlyCmd", "eDwUIUtils", 
-"eDwEventMgr", "eDwUIShortcutMenu", "eDwKeyMgr", "eDwEvents", "eDwUIBasePlugin", "utils", "jqutils"],
- (function (require, exports, eDwTypes_14 ,eDwCommandMgr, eDwSetHierNodeAttribsCmd, eDwShowOnlyCmd, eDwUIUtils, 
- eDwEventMgr, eDwUIShortcutMenu_4, eDwKeyMgr_4, eDwEvents_7, eDwUIBasePlugin_1, utils, jqutils) {
-    "use strict";
-    console.log(`plm test plmTestPlugin`)
-
-    var plmTestPlugin = function(_super){
-        __extends(plmTestPlugin, _super);
-        function plmTestPlugin(iViewer,iViewerFeatOpts){
-            console.log(`plmTestPlugin construct`)
-            var _this = _super.call(this, "plmTest", iViewer, 0, iViewerFeatOpts) || this;
-
-            /*todo:
-            1、找到插件加载入口
-            2、plm插件继承基类，并加到插件列表运行
-            3、模仿 plm test:HideOthers 写业务
-            */
-            var selMgr = iViewer.SelectionMgr;
-
-             $('#btnPLMHideOthers').on('click',(e) => {
-                var selectNode = selMgr.getSelHierarchyNodes();
-                var showOnlyCmd = new eDwShowOnlyCmd(iViewer, selectNode);
-                return [4, eDwCommandMgr.get().run(showOnlyCmd, "commit")];
-            })
-            $('#btnPLMSelectFirst').on('click',(e) => {
-                let fileName = 'ksd171005a-01-04-84<1>';
-                let selector = `div.edrawings-submenu-list-item:contains("${fileName}")`;
-                let jqTarget = $(selector);
-                let id = eDwUIUtils.getIDHC(jqTarget)
-                selMgr.selectByID(id)
-            })
-            $('#btnPLMShowAll').on('click',(e) => {
-                var showAllCmd = new eDwShowOnlyCmd(iViewer);
-                return [4, eDwCommandMgr.get().run(showAllCmd, "commit")];
-            })
-            $('#btnPLMHideShow').on('click',(e) => {
-                var selHierNodes = selMgr.getSelHierarchyNodes();
-                var attribs = selHierNodes[0].getAttribs().copy();
-                attribs.Visible = !attribs.Visible;
-                var selHideShowCmd = new eDwSetHierNodeAttribsCmd(iViewer, selHierNodes, attribs);
-                return [4, eDwCommandMgr.get().run(selHideShowCmd, "commit")];
-            })
-            $('#btnPLMExplosion').on('click',(e) => {
-                var currLevel = iViewer.getExplosionLevel();
-                iViewer.setExplosionLevel(currLevel + 1);
-            })
-            $('#btnSetViewOrientation').on('click',(e) => {
-                iViewer.HCViewer.setViewOrientation(eDwTypes_14.HC.ViewOrientation.Bottom)
-            })
-            $('#btnSetPoint').on('click',(e) => {
-                mDistLine_g.draw();
-            })
-        }
-        plmTestPlugin.prototype.init = function () {
-            console.log(`plmTestPlugin init`)
-        };
-        return plmTestPlugin;
-    }(eDwUIBasePlugin_1.eDwUIBasePlugin);
-
-    return plmTestPlugin;
-}));
 </script>
 
 </html>
