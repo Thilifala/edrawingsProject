@@ -10,6 +10,7 @@ var __assign = this && this.__assign || function () {
     };
     return __assign.apply(this, arguments)
 }, Communicator;
+
 (function (d) {
     (function (h) {
         var g = function () {
@@ -1661,6 +1662,7 @@ var __assign = this && this.__assign || function () {
         })(h.Internal || (h.Internal = {}))
     })(d.Animation || (d.Animation = {}))
 })(Communicator || (Communicator = {}));
+
 var __awaiter = this && this.__awaiter || function (d, h, g, a) {
     return new(g || (g = Promise))(function (e, c) {
         function b(b) {
@@ -1684,7 +1686,7 @@ var __awaiter = this && this.__awaiter || function (d, h, g, a) {
         }
         k((a = a.apply(d, h || [])).next())
     })
-}, __generator = this && this.__generator || function (d, h) {
+}, __generator = this && this.__generator || function (operator, eventFunc) {
     function g(b) {
         return function (c) {
             return a([b, c])
@@ -1695,49 +1697,49 @@ var __awaiter = this && this.__awaiter || function (d, h, g, a) {
             throw new TypeError("Generator is already executing.");
         for (; e; )
             try {
-                if (c = 1, b && (f = a[0] &
-                            2 ? b["return"] : a[0] ? b["throw"] || ((f = b["return"]) && f.call(b), 0) : b.next) && !(f = f.call(b, a[1])).done)
+                if (c = 1, 
+                    b && (f = a[0] & 2 ? b["return"] : a[0] ? b["throw"] || ((f = b["return"]) && f.call(b), 0) : b.next) && !(f = f.call(b, a[1])).done)
                     return f;
                 if (b = 0, f)
                     a = [a[0] & 2, f.value];
                 switch (a[0]) {
-                case 0:
-                case 1:
-                    f = a;
-                    break;
-                case 4:
-                    return e.label++, {
-                        value: a[1],
-                        done: !1
-                    };
-                case 5:
-                    e.label++;
-                    b = a[1];
-                    a = [0];
-                    continue;
-                case 7:
-                    a = e.ops.pop();
-                    e.trys.pop();
-                    continue;
-                default:
-                    if (!(f = e.trys, f = 0 < f.length && f[f.length - 1]) && (6 === a[0] || 2 === a[0])) {
-                        e = 0;
-                        continue
-                    }
-                    if (3 === a[0] && (!f || a[1] > f[0] && a[1] < f[3]))
-                        e.label = a[1];
-                    else if (6 === a[0] && e.label < f[1])
-                        e.label = f[1], f = a;
-                    else if (f && e.label <
-                        f[2])
-                        e.label = f[2], e.ops.push(a);
-                    else {
-                        f[2] && e.ops.pop();
+                    case 0:
+                    case 1:
+                        f = a;
+                        break;
+                    case 4:
+                        return e.label++, {
+                            value: a[1],
+                            done: !1
+                        };
+                    case 5:
+                        e.label++;
+                        b = a[1];
+                        a = [0];
+                        continue;
+                    case 7:
+                        a = e.ops.pop();
                         e.trys.pop();
-                        continue
-                    }
+                        continue;
+                    default:
+                        if (!(f = e.trys, f = 0 < f.length && f[f.length - 1]) && (6 === a[0] || 2 === a[0])) {
+                            e = 0;
+                            continue
+                        }
+                        if (3 === a[0] && (!f || a[1] > f[0] && a[1] < f[3]))
+                            e.label = a[1];
+                        else if (6 === a[0] && e.label < f[1])
+                            e.label = f[1], f = a;
+                        else if (f && e.label <
+                            f[2])
+                            e.label = f[2], e.ops.push(a);
+                        else {
+                            f[2] && e.ops.pop();
+                            e.trys.pop();
+                            continue
+                        }
                 }
-                a = h.call(d, e)
+                a = eventFunc.call(operator, e)
             } catch (n) {
                 a = [6, n],
                 b = 0
@@ -1760,11 +1762,8 @@ var __awaiter = this && this.__awaiter || function (d, h, g, a) {
         },
         trys: [],
         ops: []
-    },
-    c,
-    b,
-    f,
-    k;
+    }
+    var c,b,f,k;
     return k = {
         next: g(0),
         "throw": g(1),
@@ -1775,6 +1774,7 @@ var __awaiter = this && this.__awaiter || function (d, h, g, a) {
     }),
     k
 };
+
 (function (d) {
     var h;
     (function (a) {
@@ -5715,6 +5715,7 @@ var __awaiter = this && this.__awaiter || function (d, h, g, a) {
         h.DomElements = g
     })(d.Internal || (d.Internal = {}))
 })(Communicator || (Communicator = {}));
+
 var __extends = this && this.__extends || function () {
     var d = function (h, g) {
         d = Object.setPrototypeOf || {
@@ -5736,8 +5737,8 @@ var __extends = this && this.__extends || function () {
         d(h, g);
         h.prototype = null === g ? Object.create(g) : (a.prototype = g.prototype, new a)
     }
-}
-();
+}();
+
 (function (d) {
     var h = function (a) {
         function c(b) {
@@ -8355,6 +8356,7 @@ var __extends = this && this.__extends || function () {
     (d.MarkupTypeManager);
     d.LineManager = h
 })(Communicator || (Communicator = {}));
+
 var __decorate = this && this.__decorate || function (d, h, g, a) {
     var e = arguments.length,
     c = 3 > e ? h : null === a ? a = Object.getOwnPropertyDescriptor(h, g) : a,
@@ -8368,6 +8370,7 @@ var __decorate = this && this.__decorate || function (d, h, g, a) {
     return 3 < e && c && Object.defineProperty(h, g, c),
     c
 };
+
 (function (d) {
     var h = function () {
         function g(a, e, c, b, f, k, l) {
@@ -11908,6 +11911,7 @@ var __decorate = this && this.__decorate || function (d, h, g, a) {
     ();
     d.IncrementalPickConfig = h
 })(Communicator || (Communicator = {}));
+
 var SC;
 (function (d) {
     d.UnspecifiedMeasurementUnit = 0;

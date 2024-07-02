@@ -7,3 +7,34 @@
     width: 200px;
     z-index: 100;
 }
+
+.plm-markUp{
+    position: fixed;
+    left: 900px;
+    top: 100px;
+    border: 1px solid red;
+    height: 20px;
+    width: 100px;
+    z-index: 100;
+    display: none;
+}
+
+.plm-point{
+    position: fixed;
+    left: 950px;
+    top: 200px;
+    border: 1px solid red;
+    height: 8px;
+    width: 8px;
+    z-index: 100;
+    border-radius: 50%;
+    background-color: red;
+    display: none;
+}
+.plm-canvas{
+    position: fixed;
+    left: 900px;
+    top: 100px;
+    /* border: 1px solid red; */
+    z-index: 100;
+}

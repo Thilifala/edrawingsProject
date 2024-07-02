@@ -1,8 +1,8 @@
 
 define("plmTestPlugin", ["require", "exports", "eDwTypes", "eDwCommandMgr", "eDwSetHierNodeAttribsCmd", "eDwShowOnlyCmd", "eDwUIUtils",
-    "eDwEventMgr", "eDwUIShortcutMenu", "eDwKeyMgr", "eDwEvents", "eDwUIBasePlugin", "utils", "jqutils", "eDwMeasureEntities"],
+    "eDwEventMgr", "eDwUIShortcutMenu", "eDwKeyMgr", "eDwEvents", "eDwUIBasePlugin", "utils", "jqutils", "eDwMeasureEntities", "eDwMeasureMgr"],
     (function (require, exports, eDwTypes_14, eDwCommandMgr, eDwSetHierNodeAttribsCmd, eDwShowOnlyCmd, eDwUIUtils,
-        eDwEventMgr, eDwUIShortcutMenu_4, eDwKeyMgr_4, eDwEvents_7, eDwUIBasePlugin_1, utils, jqutils, eDwMeasureEntities) {
+        eDwEventMgr, eDwUIShortcutMenu_4, eDwKeyMgr_4, eDwEvents_7, eDwUIBasePlugin_1, utils, jqutils, eDwMeasureEntities, eDwMeasureMgr) {
         "use strict";
         console.log(`PLM Log：plmTestPlugin`)
         var plmTestPlugin = function (_super) {
@@ -56,9 +56,34 @@ define("plmTestPlugin", ["require", "exports", "eDwTypes", "eDwCommandMgr", "eDw
                     2、找到点击事件如何触发的画点
                     3、模仿 画点
                     */
-                   let extSelObj = extSelObj_g;
-                   mMeasureEntities.addEntity(extSelObj);
+                    // var mMeasureMrg = new eDwMeasureMgr(iViewer);
+                    // let extSelObj = extSelObj_g;
+                    // mMeasureEntities.addEntity(extSelObj);
                     // mDistLine_g.draw();
+
+                    //方案2：
+                    eDwUIUtils.resetToHomeView(iViewer);
+
+                    const markUpContent = $('#plmMarkUpContent')
+                    markUpContent.show();
+                    const width = markUpContent.width();
+                    const height = markUpContent.height();
+
+                    const markUpPoint = $('#plmMarkUpPoint')
+                    markUpPoint.show();
+                    // const markUpPoint = document.getElementById("plmMarkUpPoint");
+                    // const { x2, y2, width2, height2 } = markUpPoint.getBoundingClientRect();
+
+                    const canvas = document.getElementById("myCanvas");
+                    const ctx = canvas.getContext("2d");
+                    
+                    ctx.beginPath();
+                    ctx.moveTo(width/2,height);
+                    ctx.lineTo(54,100);
+                    // ctx.lineWidth = 10;
+                    ctx.strokeStyle = "red";
+                    ctx.stroke();
+
                 })
             }
             plmTestPlugin.prototype.init = function () {

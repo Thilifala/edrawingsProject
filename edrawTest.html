@@ -37,8 +37,12 @@
         <input type="button" id="btnPLMExplosion" value="爆炸增大">
         <input type="button" id="btnSetViewOrientation" value="旋转">
         <input type="button" id="btnSetPoint" value="画点">
-
     </div>
+    <div id="plm-testMarkUp">
+        <div id="plmMarkUpContent"  class="plm-markUp">dzqTest</div>
+        <div id="plmMarkUpPoint" class="plm-point"></div>
+    </div>
+    <canvas id="myCanvas" class="plm-canvas" width="200" height="200"></canvas>
 
     <div id="edrawings-viewer" class="edrawings-viewer-regular">
         <div id="edrawings-top-bar"
@@ -6299,11 +6303,17 @@ define("eDwMeasureOperator", ["require", "exports", "eDwSelObj", "eDwBaseSelOper
                 }))
             }))
         };
+        eDwMeasureOperator.prototype.PLMTestDrawPoint = function(ioEvent){
+            this.Viewer.ViewMgr.pickFromPoint(ioEvent.getPosition(), this.getPickConfig())
+            this.mMeasureEntities.addEntity(extSelObj)
+            this.highlightMeasuringItem(extSelObj)
+        };
         eDwMeasureOperator.prototype.onMouseUp = function (ioEvent) {
             return __awaiter(this, void 0, void 0, (function () {
                 var extSelObj, idx, isAdded;
                 return __generator(this, (function (_a) {
                     console.log(`PLM Log：eDwMeasureOperator.onMouseUp:${_a.label}`)
+                    //画点：0134
                     switch (_a.label) {
                         case 0:
                             if (this.mOperatingLabel) {
