@@ -1,4 +1,4 @@
-.plm-panel{
+.dzq-panel{
     position: fixed;
     right: 0;
     bottom: 0;
@@ -8,7 +8,7 @@
     z-index: 100;
 }
 
-.plm-markUp{
+.dzq-markUp{
     position: fixed;
     left: 900px;
     top: 100px;
@@ -19,7 +19,7 @@
     display: none;
 }
 
-.plm-point{
+.dzq-point{
     position: fixed;
     left: 950px;
     top: 200px;
@@ -31,7 +31,7 @@
     background-color: red;
     display: none;
 }
-.plm-canvas{
+.dzq-canvas{
     position: fixed;
     left: 900px;
     top: 100px;

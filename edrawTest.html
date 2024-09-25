@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <link rel="stylesheet" href="./style/edw.css">
-    <link rel="stylesheet" href="./style/plmStyle.css">
+    <link rel="stylesheet" href="./style/dzqStyle.css">
 
     <script src="./model.js"></script>
     <script src="./util/jquery.js"></script>
@@ -18,7 +18,7 @@
     <script src="./util/SC.js"></script>
     <script src="./util/edrawTool.js"></script>
 
-    <script src="./plmTest.js"></script>
+    <script src="./dzqTest.js"></script>
     
     <title></title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -29,23 +29,23 @@
 </head>
 
 <body>
-    <div id="plm-panel" class="plm-panel">
-        <input type="button" id="btnPLMHideOthers" value="隐藏其它">
-        <input type="button" id="btnPLMSelectFirst" value="选中第一个零件">
-        <input type="button" id="btnPLMShowAll" value="显示全部">
-        <input type="button" id="btnPLMHideShow" value="隐藏/显示">
-        <input type="button" id="btnPLMExplosion" value="爆炸增大">
+    <div id="dzq-panel" class="dzq-panel">
+        <input type="button" id="btnDzqHideOthers" value="隐藏其它">
+        <input type="button" id="btnDzqSelectFirst" value="选中第一个零件">
+        <input type="button" id="btnDzqShowAll" value="显示全部">
+        <input type="button" id="btnDzqHideShow" value="隐藏/显示">
+        <input type="button" id="btnDzqExplosion" value="爆炸增大">
         <input type="button" id="btnSetViewOrientation" value="旋转">
         <input type="button" id="btnSetPoint" value="画点">
         <input type="button" id="btnRemovePoint" value="移除点">
         <input type="button" id="btnSetLine" value="画线">
         <input type="input" id="remarkInput" value="">
     </div>
-    <!-- <div id="plm-testMarkUp">
-        <div id="plmMarkUpContent"  class="plm-markUp">dzqTest</div>
-        <div id="plmMarkUpPoint" class="plm-point"></div>
+    <!-- <div id="dzq-testMarkUp">
+        <div id="plmMarkUpContent"  class="dzq-markUp">dzqTest</div>
+        <div id="plmMarkUpPoint" class="dzq-point"></div>
     </div> -->
-    <!-- <canvas id="myCanvas" class="plm-canvas" width="200" height="200"></canvas> -->
+    <!-- <canvas id="myCanvas" class="dzq-canvas" width="200" height="200"></canvas> -->
 
     <div id="edrawings-viewer" class="edrawings-viewer-regular">
         <div id="edrawings-top-bar"
@@ -1015,7 +1015,7 @@ define("eDwUIComponentTreePlugin", ["require", "exports", "eDwUICompTreeHTMLGene
                                     eDwUIUtils.addSubTreeArrowEventHandler(this.mUIHTMLEventMgr, c_compPanelID);
                                     this.mUIHTMLEventMgr.addDelegatedEventHandler("#edrawings-component-tree-menu .edrawings-submenu-list-item", "dblclick", (function (iEvent) {
 
-                                            //PLM TEST
+                                            //dzq TEST
                                             (function () {
                                                 return __awaiter(_this, void 0, void 0, (function () {
                                                         var selMgr,
@@ -1036,7 +1036,7 @@ define("eDwUIComponentTreePlugin", ["require", "exports", "eDwUICompTreeHTMLGene
                                                     }))
                                             })();
                                             eDwUIShortcutMenu_4g.hide();
-                                            //PLM TEST
+                                            //dzq TEST
 
 
                                             // selMgr = this.mViewer.SelectionMgr;
@@ -1160,7 +1160,7 @@ define("eDwUIComponentTreePlugin", ["require", "exports", "eDwUICompTreeHTMLGene
         var c_compPanelID = "#edrawings-component-tree-menu";
         var c_eventIDSuffix = ".edw.tree";
 
-        //PLM TEST
+        //dzq TEST
         eDwUIComponentTreePlugin_g = eDwUIComponentTreePlugin;
         return eDwUIComponentTreePlugin
     }));
@@ -3640,7 +3640,7 @@ define("eDwMeasureEntities", ["require", "exports", "eDwEventMgr", "eDwSelObj", 
                             if (!isValid && n > 0) {
                                 result = new MeasureResultString(cLocalizedInfo, cLocalizedInvalidCombo);
                                 var selObjPosition = iSelObjs[n - 1].getPosition();
-                                console.log('plm-获取点位置');
+                                console.log('dzq-获取点位置');
                                 ioAuxGeo.addMessage(result, selObjPosition, eDwTypes_1.HC.Color.red())
                             }
                             ioAuxGeo.updateResultLabels();
@@ -4130,7 +4130,7 @@ define("eDwMeasureEntities", ["require", "exports", "eDwEventMgr", "eDwSelObj", 
             return this.mWCEndPtHC0 && this.mWCEndPntHC1 && eDwGeomUtils.isValidHCPoint(this.mWCEndPtHC0) && eDwGeomUtils.isValidHCPoint(this.mWCEndPntHC1)
         };
         MeasureBaseLine.prototype.createHCLine = function () {
-            // console.log('PLM-createHCLine')
+            // console.log('dzq-createHCLine')
             this.mLine = new eDwTypes_1.HC.Markup.Shape.Line;
             this.setColorOnHCLine(this.mColor);
             this.updateLinePts();
@@ -4489,7 +4489,7 @@ define("eDwMeasureEntities", ["require", "exports", "eDwEventMgr", "eDwSelObj", 
                 var label = new MeasureLabel(this.mViewer, iFaceSelObj.getPosition());
                 label.addItem(new MeasureResultString(cLocalizedEntity, cLocalizedPlane));
                 this.mLabels.push(label)
-                // console.log('PLM-画容器')
+                // console.log('dzq-画容器')
             }
         };
         MeasureAuxMessage.prototype.addIfCylinder = function (iCylinderOrigHC, iFaceSelObj) {
@@ -4499,7 +4499,7 @@ define("eDwMeasureEntities", ["require", "exports", "eDwEventMgr", "eDwSelObj", 
                 label.addItem(new MeasureResultString(cLocalizedEntity, cLocalizedCylinder));
                 label.addItem(new MeasureResultDistance(cLocalizedDiameter, 2 * iCylinderOrigHC.radius));
                 this.mLabels.push(label)
-                // console.log('PLM-画线')
+                // console.log('dzq-画线')
             }
         };
         MeasureAuxMessage.prototype.getLabels = function () {
@@ -5376,7 +5376,7 @@ define("eDwMeasureEntities", ["require", "exports", "eDwEventMgr", "eDwSelObj", 
             if (!this.mPntData.length) return;
             if (eDwMeasureEntities.PointToPoint) {
                 if (this.mDistLine) {
-                    mDistLine_g = this.mDistLine;//PLM Test
+                    mDistLine_g = this.mDistLine;//dzq Test
                     this.mDistLine.draw();
                 }
                 if (this.mDelta) this.mDelta.draw(iImmediateDrawMode)
@@ -5539,7 +5539,7 @@ define("eDwMeasureEntities", ["require", "exports", "eDwEventMgr", "eDwSelObj", 
             }
         };
         MeasureAuxGeo.prototype.addMarkupLabels = function () {
-            console.log('PLM-添加标签')
+            console.log('dzq-添加标签')
             this.clearMarkupLabels();
             var markupMgr = this.mViewer.getHCMarkupManager();
             var n = this.mResultLabels.length;
@@ -6075,7 +6075,7 @@ define("eDwMeasureMgr", ["require", "exports", "eDwMeasureOperator"], (function 
             this.mViewer.OperatorMgr.unregisterCustomOperatorByID(this.mMeasureOp.OperatorID)
         };
         eDwMeasureMgr.prototype.addMarkup = function (iNewMarkupID) {
-            console.log(`PLM eDwMeasureMgr.addMarkup`)
+            console.log(`dzq eDwMeasureMgr.addMarkup`)
             if (!this.mMarkupArray) {
                 this.mMarkupArray = []
             }
@@ -6124,7 +6124,7 @@ define("eDwMeasureMgr", ["require", "exports", "eDwMeasureOperator"], (function 
             this.mMeasureOp.setMeasureMode(iMode)
         };
         eDwMeasureMgr.prototype.setPointToPointMode = function (iEnable) {
-            console.log(`PLM eDwMeasureMgr.setPointToPointMode`)
+            console.log(`dzq eDwMeasureMgr.setPointToPointMode`)
             this.mMeasureOp.setPointToPointMode(iEnable)
         };
         eDwMeasureMgr.prototype.setMeasureDelta = function (iEnable) {
@@ -6137,14 +6137,14 @@ define("eDwMeasureMgr", ["require", "exports", "eDwMeasureOperator"], (function 
             this.mMeasureOp.clearMeasureEntities()
         };
         eDwMeasureMgr.prototype.highlightSelectEntityAt = function (idx) {
-            console.log(`PLM eDwMeasureMgr.highlightSelectEntityAt`)
+            console.log(`dzq eDwMeasureMgr.highlightSelectEntityAt`)
             this.mMeasureOp.highlightEntityTempAt(idx)
         };
         eDwMeasureMgr.prototype.dehighlightAllSelectEntity = function () {
             this.mMeasureOp.dehighlightAllTemporaryEntity()
         };
         eDwMeasureMgr.prototype.updateResults = function () {
-            console.log(`PLM eDwMeasureMgr.updateResults`)
+            console.log(`dzq eDwMeasureMgr.updateResults`)
             this.mMeasureOp.updateMeasureResults(this.mViewer.getModel().getUserUnits())
         };
         return eDwMeasureMgr
@@ -6228,7 +6228,7 @@ define("eDwMeasureOperator", ["require", "exports", "eDwSelObj", "eDwBaseSelOper
             return __awaiter(this, void 0, void 0, (function () {
                 var pos, label, extSelObj, added, error_1;
                 return __generator(this, (function (_a) {
-                    // console.log('PLM Log：eDwMeasureOperator.onMouseMove')
+                    // console.log('dzq Log：eDwMeasureOperator.onMouseMove')
                     switch (_a.label) {
                         case 0:
                             pos = ioEvent.getPosition();
@@ -6289,7 +6289,7 @@ define("eDwMeasureOperator", ["require", "exports", "eDwSelObj", "eDwBaseSelOper
             return __awaiter(this, void 0, void 0, (function () {
                 var pos, label;
                 return __generator(this, (function (_a) {
-                    console.log(`PLM Log：eDwMeasureOperator.onMouseDown:${_a.label}`)
+                    console.log(`dzq Log：eDwMeasureOperator.onMouseDown:${_a.label}`)
                     //画点：023
                     switch (_a.label) {
                         case 0:
@@ -6317,7 +6317,7 @@ define("eDwMeasureOperator", ["require", "exports", "eDwSelObj", "eDwBaseSelOper
             return __awaiter(this, void 0, void 0, (function () {
                 var extSelObj, idx, isAdded;
                 return __generator(this, (function (_a) {
-                    console.log(`PLM Log：eDwMeasureOperator.onMouseUp:${_a.label}`)
+                    console.log(`dzq Log：eDwMeasureOperator.onMouseUp:${_a.label}`)
                     //画点：0134
                     switch (_a.label) {
                         case 0:
@@ -6334,7 +6334,7 @@ define("eDwMeasureOperator", ["require", "exports", "eDwSelObj", "eDwBaseSelOper
                             return [4, this.Viewer.ViewMgr.pickFromPoint(ioEvent.getPosition(), this.getPickConfig())];
                         case 1:
                             extSelObj = _a.sent();
-                            extSelObj_g = extSelObj;//plm Test
+                            extSelObj_g = extSelObj;//dzq Test
                             idx = this.mMeasureEntities.isItemSelected(extSelObj);
                             if (!(!eDwMeasureEntities.PointToPoint && utils.isNumber(idx))) {
                                 return [3, 3];
@@ -7126,7 +7126,7 @@ define("eDrawingsWebViewer", ["require", "exports", "eDwUI", "eDwServiceMgr", "e
     function l_init(ioViewerOpts, iContainerElemID) {
         c_eDrawingsUI.initUIEvents(ioViewerOpts);
 
-        var modelContents = window.modelContents_g;//PLM Test
+        var modelContents = window.modelContents_g;//dzq Test
 
         if (modelContents !== "<!-- SC_MODEL_DATA" + " -->") {
             eDwServiceMgr.get().disableAdvancedServices();
@@ -8244,7 +8244,7 @@ define("eDwCommandMgr", ["require", "exports", "utils"], (function (require, exp
         return eDwCommandMgr
     }();
 
-    //plm test
+    //dzq test
     eDwCommandMgrg=eDwCommandMgr;
     
     return eDwCommandMgr
@@ -14876,7 +14876,7 @@ define("eDwSelMgr", ["require", "exports", "eDwSelObj", "eDwSelectionOperator", 
         };
         eDwSelMgr.prototype.getSelHierarchyNodes = function () {
 
-            console.log(`plm test getSelHierarchyNodes`)
+            console.log(`dzq test getSelHierarchyNodes`)
 
             var e_38, _a;
             var selHierNodes = [];
@@ -17196,7 +17196,7 @@ define("eDwShowOnlyCmd", ["require", "exports", "eDwCommandMgr", "eDwCompositeCm
         });
         return eDwShowOnlyCmd
     }(eDwCompositeCmd);
-    ///PLM TEST
+    ///dzq TEST
     eDwShowOnlyCmdg = eDwShowOnlyCmd;
     return eDwShowOnlyCmd
 }));
@@ -19532,7 +19532,7 @@ define("eDwUIBaseEventHandlers", ["require", "exports", "eDwEventMgr", "eDwUIHTM
                         switch (_a.label) {
                             case 0:
                                 pluginMgr = eDwUIPluginMgr.get();
-                                return [4, pluginMgr.loadPlugins(["eDwUIHierNodeVisMenuItemsPlugin", "eDwUIMoveComponentPlugin", "eDwUIModelViewTabsPlugin", "eDwUIExplodePlugin", "eDwUIConfigurationsPlugin", "eDwUIComponentTreePlugin", "eDwUIMeasurePlugin","plmTestPlugin"], iViewer)];
+                                return [4, pluginMgr.loadPlugins(["eDwUIHierNodeVisMenuItemsPlugin", "eDwUIMoveComponentPlugin", "eDwUIModelViewTabsPlugin", "eDwUIExplodePlugin", "eDwUIConfigurationsPlugin", "eDwUIComponentTreePlugin", "eDwUIMeasurePlugin","dzqTestPlugin"], iViewer)];
                             case 1:
                                 _a.sent();
                                 return [4, pluginMgr.loadDynamicPlugins(iViewer)];
@@ -20130,7 +20130,7 @@ define("eDwUIHTMLEventMgr", ["require", "exports", "utils", "jqutils"], (functio
                 for (var elements_2 = __values(elements), elements_2_1 = elements_2.next(); !elements_2_1.done; elements_2_1 = elements_2.next()) {
                     var element = elements_2_1.value;
                     element.addEventListener(iEventName, elemHandlers.MainDispatcher, true);
-                    // console.log(`plm test addEvent:  ${iEventName}`)
+                    // console.log(`dzq test addEvent:  ${iEventName}`)
                     
                     elemHandlers.Handlers.push({
                         EventTarget: element,
@@ -20511,7 +20511,7 @@ define("eDwUIHierNodeVisMenuItemsPlugin", ["require", "exports", "eDwCommandMgr"
                                 return __generator(this, (function (_a) {
                                     switch (_a.label) {
                                         case 0:
-                                            console.log(`plm test:HideOthers`)
+                                            console.log(`dzq test:HideOthers`)
                                             selMgr = this.mViewer.SelectionMgr;
                                             showOnlyCmd = new eDwShowOnlyCmd(this.mViewer, selMgr.getSelHierarchyNodes());
                                             return [4, eDwCommandMgr.get().run(showOnlyCmd, "commit")];
@@ -21957,7 +21957,7 @@ define("eDwUIShortcutMenu", ["require", "exports", "eDwUIHTMLEventMgr", "eDwGene
     }();
     exports.eDwUIShortcutMenu = eDwUIShortcutMenu;
 
-     //PLM TEST
+     //dzq TEST
     eDwUIShortcutMenu_4g = eDwUIShortcutMenu;
 
     var c_menuID = "#edrawings-shortcut-menu";
@@ -24499,7 +24499,7 @@ define("jqutils", ["require", "exports"], (function (require, exports) {
     exports.getAsJQueryObj = getAsJQueryObj
 }));
 
-//PLM TEST：不知道何用，暂注释
+//dzq TEST：不知道何用，暂注释
 // requirejs.config({
 //     baseUrl: "./js/3rdParty",
 //     waitSeconds: 120,
