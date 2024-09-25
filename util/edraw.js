@@ -1663,116 +1663,129 @@ var __assign = this && this.__assign || function () {
     })(d.Animation || (d.Animation = {}))
 })(Communicator || (Communicator = {}));
 
-var __awaiter = this && this.__awaiter || function (d, h, g, a) {
-    return new(g || (g = Promise))(function (e, c) {
-        function b(b) {
+//使用生成器和promise模仿async/await的行为
+var __awaiter = this && this.__awaiter || function (owner, args, promiseT, func) {
+    return new (promiseT || (promiseT = Promise))(function (resolve, reject) {
+        function execute(b) {
             try {
-                k(a.next(b))
-            } catch (n) {
-                c(n)
+                executeByState(func.next(b))
+            } catch (ex) {
+                reject(ex)
             }
         }
-        function f(b) {
+        function handelException(b) {//处理内部异常
             try {
-                k(a["throw"](b))
-            } catch (n) {
-                c(n)
+                executeByState(func["throw"](b))
+            } catch (ex) {
+                reject(ex)
             }
         }
-        function k(c) {
-            c.done ? e(c.value) : (new g(function (b) {
-                    b(c.value)
-                })).then(b, f)
+        function executeByState(genR) {
+            genR.done ? resolve(genR.value) : (new promiseT(function (resolve2) {
+                resolve2(genR.value)
+            })).then(execute, handelException)
         }
-        k((a = a.apply(d, h || [])).next())
+
+        var commandFunc = func = func.apply(owner, args || []);
+        executeByState(commandFunc.next())
     })
-}, __generator = this && this.__generator || function (operator, eventFunc) {
-    function g(b) {
+}
+var __generator = this && this.__generator || function (operator, eventFunc) {
+    function g(b) {//b的值为0, 1,或 2，分别对应生成器的next、throw、return方法
         return function (c) {
-            return a([b, c])
+            return Execute([b, c])
         }
     }
-    function a(a) {
-        if (c)
+
+    function Execute(a) {//[label,promise/label]
+        if (isExecuted)
             throw new TypeError("Generator is already executing.");
-        for (; e; )
+        for (; state;)
             try {
-                if (c = 1, 
-                    b && (f = a[0] & 2 ? b["return"] : a[0] ? b["throw"] || ((f = b["return"]) && f.call(b), 0) : b.next) && !(f = f.call(b, a[1])).done)
-                    return f;
-                if (b = 0, f)
-                    a = [a[0] & 2, f.value];
+                if (isExecuted = 1,
+                    b && (labelArrOrTrys = a[0] & 2 ? b["return"] : a[0] ? b["throw"] || ((labelArrOrTrys = b["return"]) && labelArrOrTrys.call(b), 0) : b.next) && !(labelArrOrTrys = labelArrOrTrys.call(b, a[1])).done)
+                    return labelArrOrTrys;
+                if (b = 0, labelArrOrTrys)
+                    a = [a[0] & 2, labelArrOrTrys.value];
                 switch (a[0]) {
                     case 0:
                     case 1:
-                        f = a;
+                        labelArrOrTrys = a;
                         break;
-                    case 4:
-                        return e.label++, {
+                    case 4://生成器未完成
+                        return state.label++, {
                             value: a[1],
-                            done: !1
+                            done: false
                         };
-                    case 5:
-                        e.label++;
+                    case 5://继续下一操作
+                        state.label++;
                         b = a[1];
                         a = [0];
                         continue;
                     case 7:
-                        a = e.ops.pop();
-                        e.trys.pop();
+                        a = state.ops.pop();
+                        state.trys.pop();
                         continue;
                     default:
-                        if (!(f = e.trys, f = 0 < f.length && f[f.length - 1]) && (6 === a[0] || 2 === a[0])) {
-                            e = 0;
+                        labelArrOrTrys = state.trys;
+                        if (!(labelArrOrTrys = 0 < labelArrOrTrys.length && labelArrOrTrys[labelArrOrTrys.length - 1])
+                            && (6 === a[0] || 2 === a[0])
+                        ) {
+                            state = 0;//结束循环
                             continue
                         }
-                        if (3 === a[0] && (!f || a[1] > f[0] && a[1] < f[3]))
-                            e.label = a[1];
-                        else if (6 === a[0] && e.label < f[1])
-                            e.label = f[1], f = a;
-                        else if (f && e.label <
-                            f[2])
-                            e.label = f[2], e.ops.push(a);
+                        if (3 === a[0] && (!labelArrOrTrys || a[1] > labelArrOrTrys[0] && a[1] < labelArrOrTrys[3])) {
+                            state.label = a[1];//执行下一label
+                        }
+                        else if (6 === a[0] && state.label < labelArrOrTrys[1]) {
+                            state.label = labelArrOrTrys[1], labelArrOrTrys = a;
+                        }
+                        else if (labelArrOrTrys && state.label < labelArrOrTrys[2]) {
+                            state.label = labelArrOrTrys[2], state.ops.push(a);
+                        }
                         else {
-                            f[2] && e.ops.pop();
-                            e.trys.pop();
+                            labelArrOrTrys[2] && state.ops.pop();
+                            state.trys.pop();
                             continue
                         }
                 }
-                a = eventFunc.call(operator, e)
+                //执行主体
+                a = eventFunc.call(operator, state)
             } catch (n) {
                 a = [6, n],
-                b = 0
+                    b = 0
             } finally {
-            c = f = 0
-        }
+                isExecuted = labelArrOrTrys = 0
+            }
         if (a[0] & 5)
             throw a[1];
         return {
             value: a[0] ? a[1] : void 0,
-            done: !0
+            done: true
         }
     }
-    var e = {
+
+    var state = {
         label: 0,
         sent: function () {
-            if (f[0] & 1)
-                throw f[1];
-            return f[1]
+            if (labelArrOrTrys[0] & 1)
+                throw labelArrOrTrys[1];
+            return labelArrOrTrys[1]
         },
-        trys: [],
-        ops: []
+        trys: [],//异常处理的堆栈
+        ops: [] //操作的堆栈
     }
-    var c,b,f,k;
-    return k = {
+
+    var isExecuted, b, labelArrOrTrys, commandFunc;//执行流和状态
+    commandFunc = {
         next: g(0),
         "throw": g(1),
         "return": g(2)
     },
-    "function" === typeof Symbol && (k[Symbol.iterator] = function () {
-        return this
-    }),
-    k
+        "function" === typeof Symbol && (commandFunc[Symbol.iterator] = function () {
+            return this
+        })
+    return commandFunc;
 };
 
 (function (d) {
