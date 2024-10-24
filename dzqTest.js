@@ -1,3 +1,48 @@
+var testData = [
+    {
+        cameraHC: {
+            "_position": { "x": -0.36782525120971576, "y": 0.031138495089523446, "z": 0.8226964153474813 },
+            "_target": { "x": -0.06658873274444943, "y": 0.009220431872186685, "z": -0.008505636931538163 },
+            "_up": { "x": -0.5862569573367369, "y": -0.7871149551127813, "z": -0.1917102694486548 },
+            "_width": 0.10674301907061828,
+            "_height": 0.10674301907061828,
+            "_projection": 0,
+            "_nearLimit": 0.01,
+            "_cameraFlags": 0
+        },
+        position: { x: 787, y: 399 },
+        content: 'testAAA'
+    },
+    {
+        cameraHC: {
+            "_position": { "x": 0.6816282541660722, "y": 0.3537322449423354, "z": -1.0733480868543144 },
+            "_target": { "x": -0.006859464309613223, "y": 0.006562212976345454, "z": 0.024573252204699249 },
+            "_up": { "x": 0.7594967898327307, "y": -0.581017712610704, "z": 0.29254579789564996 },
+            "_width": 0.1619331133752787,
+            "_height": 0.1619331133752787,
+            "_projection": 0,
+            "_nearLimit": 0.01,
+            "_cameraFlags": 0
+        },
+        position: { x: 1006, y: 327 },
+        content: 'testBBB'
+    },
+    {
+        cameraHC: {
+            "_position": { "x": -0.01411583307297489, "y": -0.03465556234925549, "z": -0.275444015259687 },
+            "_target": { "x": -0.03250801488302456, "y": -0.01879923961967077, "z": 0.006605229477571949 },
+            "_up": { "x": -0.27013356300722665, "y": 0.9601573930895815, "z": -0.0715935655798729 },
+            "_width": 0.10817175781250002,
+            "_height": 0.13422226562500004,
+            "_projection": 0,
+            "_nearLimit": 0.01,
+            "_cameraFlags": 0
+        },
+        position: { x: 891, y: 424 },
+        content: 'testCCC'
+    }
+]
+
 
 define("dzqTestPlugin", ["require", "exports", "eDwTypes", "eDwCommandMgr", "eDwSetHierNodeAttribsCmd", "eDwShowOnlyCmd", "eDwUIUtils",
     "eDwEventMgr", "eDwUIShortcutMenu", "eDwKeyMgr", "eDwEvents", "eDwUIBasePlugin", "utils", "jqutils", "eDwMeasureEntities", "eDwMeasureMgr", "eDwUILocalize"],
@@ -30,19 +75,6 @@ define("dzqTestPlugin", ["require", "exports", "eDwTypes", "eDwCommandMgr", "eDw
 
             return DzqResultString
         }();
-
-        var extSelObj;//点对象
-        var testCameraHC = {
-            "_position": { "x": -0.36782525120971576, "y": 0.031138495089523446, "z": 0.8226964153474813 },
-            "_target": { "x": -0.06658873274444943, "y": 0.009220431872186685, "z": -0.008505636931538163 },
-            "_up": { "x": -0.5862569573367369, "y": -0.7871149551127813, "z": -0.1917102694486548 },
-            "_width": 0.10674301907061828,
-            "_height": 0.10674301907061828,
-            "_projection": 0,
-            "_nearLimit": 0.01,
-            "_cameraFlags": 0
-        }
-        var testPosition = { x: 787, y: 399 };
 
         var dzqTestPlugin = function (_super) {
             __extends(dzqTestPlugin, _super);
@@ -108,34 +140,6 @@ define("dzqTestPlugin", ["require", "exports", "eDwTypes", "eDwCommandMgr", "eDw
                     // iViewer.HCViewer.setViewOrientation(eDwTypes_14.HC.ViewOrientation.Bottom)//顶层方法
                     dzqSetCamera(iViewer, testCameraHC, 400);
                 })
-                $('#btnSetPoint').on('click', (e) => {
-                    /*todo:
-                    1、done-找到canvas点击事件原理(弄清楚执行机制，__awaiter，__generator)
-                    2、done-找到点击事件如何触发的画点
-                    3、done-记录点的位置+视图状态
-                    3、done-模仿 画点 复原点的位置
-                    ----画线方案1----
-                    1、-找画线的原理
-                    2、-线连自定义框
-                    ----画线方案2----
-                    1、旋转+滚动后，找出点的二维坐标
-                    2、canvas画框
-                    */
-                    return __awaiter(_this, void 0, void 0, (function () {
-                        return __generator(this, (function (_a) {
-                            switch (_a.label) {
-                                case 0:
-                                    return [4, dzqSetCamera(iViewer, testCameraHC)];
-                                case 1:
-                                    return [4, dzqSetPoint(_this, mMeasureMrg, eDwMeasureEntities, iViewer, utils, testPosition)];
-                                case 2:
-                                    dzqSetLine(extSelObj, mMeasureMrg)
-                                    return [2];
-                            }
-                        }))
-                    }))
-
-                })
                 $('#btnRemovePoint').on('click', (e) => {
                     return __awaiter(_this, void 0, void 0, (function () {
                         var extSelObj, idx, isAdded;
@@ -156,10 +160,38 @@ define("dzqTestPlugin", ["require", "exports", "eDwTypes", "eDwCommandMgr", "eDw
                         }))
                     }))
                 })
+                $('#btnSetPoint').on('click', (e) => {
+                    /*todo:
+                    1、done-找到canvas点击事件原理(弄清楚执行机制，__awaiter，__generator)
+                    2、done-找到点击事件如何触发的画点
+                    3、done-记录点的位置+视图状态
+                    3、done-模仿 画点 复原点的位置
+                    ----画线方案1----
+                    1、-找画线的原理
+                    2、-线连自定义框
+                    ----画线方案2----
+                    1、旋转+滚动后，找出点的二维坐标
+                    2、canvas画框
+                    */
+
+                    return __awaiter(_this, void 0, void 0, (function () {
+                        return __generator(this, (function (_a) {
+                            if (_a.label < testData.length) {
+                                var idx = _a.label;
+                                return [4, drawRemark(_this, iViewer, testData[idx])];
+                            }
+                            else {
+                                _a.sent();
+                                return [2];
+                            }
+                        }))
+                    }))
+                })
+
                 $('#btnSetLine').on('click', (e) => {
                     dzqSetLine(extSelObj, mMeasureMrg);
                 })
-                $('#remarkInput').on('change',(e) => {
+                $('#remarkInput').on('change', (e) => {
                     var newVal = e.target.value;
                     $('#edrawings-canvas-svg text tspan').eq(1).html(newVal)
                 })
@@ -170,9 +202,32 @@ define("dzqTestPlugin", ["require", "exports", "eDwTypes", "eDwCommandMgr", "eDw
             return dzqTestPlugin;
         }(eDwUIBasePlugin_1.eDwUIBasePlugin);
 
+        function drawRemark(_this, iViewer, remarkInfo) {
+
+            var testCameraHC = remarkInfo.cameraHC;
+            var testPosition = remarkInfo.position;
+            var rmkContent = remarkInfo.content;
+            var mMeasureMrg = new eDwMeasureMgr(iViewer);
+
+            __awaiter(_this, void 0, void 0, (function () {
+                return __generator(this, (function (_a) {
+                    switch (_a.label) {
+                        case 0:
+                            return [4, dzqSetCamera(iViewer, testCameraHC)];
+                        case 1:
+                            return [4, dzqSetPoint(_this, mMeasureMrg, eDwMeasureEntities, iViewer, utils, testPosition)];
+                        case 2:
+                            var pointObj = _a.sent();
+                            return [4, dzqSetLine(pointObj, mMeasureMrg, rmkContent)];
+                        case 3:
+                            return [2];
+                    }
+                }))
+            }))
+        }
 
         //还原摄像机坐标
-        function dzqSetCamera(iViewer, testCameraHC, iDuration) {
+        function dzqSetCamera(iViewer, rmkCameraHC, iDuration) {
             // var centerHC = iViewer.getModel().getBoundingBox().center();
             var viewHC = iViewer.getHCView();
             var cameraHC = viewHC.getCamera().copy();
@@ -196,14 +251,14 @@ define("dzqTestPlugin", ["require", "exports", "eDwTypes", "eDwCommandMgr", "eDw
             done3、还原坐标
             done4、还原比例
             */
-            Object.assign(cameraHC._position, testCameraHC._position);
-            Object.assign(cameraHC._target, testCameraHC._target);
-            Object.assign(cameraHC._up, testCameraHC._up);
-            cameraHC._width = testCameraHC._width;
-            cameraHC._height = testCameraHC._height;
-            cameraHC._projection = testCameraHC._projection;
-            cameraHC._nearLimit = testCameraHC._nearLimit;
-            cameraHC._cameraFlags = testCameraHC._cameraFlags;
+            Object.assign(cameraHC._position, rmkCameraHC._position);
+            Object.assign(cameraHC._target, rmkCameraHC._target);
+            Object.assign(cameraHC._up, rmkCameraHC._up);
+            cameraHC._width = rmkCameraHC._width;
+            cameraHC._height = rmkCameraHC._height;
+            cameraHC._projection = rmkCameraHC._projection;
+            cameraHC._nearLimit = rmkCameraHC._nearLimit;
+            cameraHC._cameraFlags = rmkCameraHC._cameraFlags;
 
             iDuration = iDuration ?? 0;//动画延时
             // viewHC.fitWorld(iDuration, cameraHC);
@@ -211,7 +266,8 @@ define("dzqTestPlugin", ["require", "exports", "eDwTypes", "eDwCommandMgr", "eDw
         }
 
         //还原点的位置
-        function dzqSetPoint(_this, mMeasureMrg, eDwMeasureEntities, iViewer, utils, testPosition) {
+        function dzqSetPoint(_this, mMeasureMrg, eDwMeasureEntities, iViewer, utils, rmkPosition) {
+            var pointObj; //todo:如何返回到上层
             return __awaiter(_this, void 0, void 0, (function () {
                 var idx, isAdded;
                 //一个mMeasureMrg只能画一个点
@@ -220,10 +276,10 @@ define("dzqTestPlugin", ["require", "exports", "eDwTypes", "eDwCommandMgr", "eDw
                     switch (_a.label) {
                         case 0:
                             mMeasureOp.resetTempHighlight();
-                            return [4, iViewer.ViewMgr.pickFromPoint(testPosition, mMeasureOp.getPickConfig())];
+                            return [4, iViewer.ViewMgr.pickFromPoint(rmkPosition, mMeasureOp.getPickConfig())];
                         case 1:
-                            extSelObj = _a.sent();//点对象
-                            idx = mMeasureOp.mMeasureEntities.isItemSelected(extSelObj);//点对象序号
+                            pointObj = _a.sent();//点对象
+                            idx = mMeasureOp.mMeasureEntities.isItemSelected(pointObj);//点对象序号
                             if (eDwMeasureEntities.PointToPoint || !utils.isNumber(idx)) {
                                 return [3, 3];
                             }
@@ -234,16 +290,16 @@ define("dzqTestPlugin", ["require", "exports", "eDwTypes", "eDwCommandMgr", "eDw
                             return [2];
                         case 3:
                             //点对象附加
-                            return [4, mMeasureOp.mMeasureEntities.addEntity(extSelObj)];
+                            return [4, mMeasureOp.mMeasureEntities.addEntity(pointObj)];
                         case 4:
                             isAdded = _a.sent();
                             if (isAdded) {
                                 //高亮整个零件(注释了只高亮面，效果更好)
-                                // mMeasureOp.highlightMeasuringItem(extSelObj)
+                                // mMeasureOp.highlightMeasuringItem(pointObj)
                             } else {
                                 mMeasureOp.dehighlightMeasuringItems()
                             }
-                            return [2]
+                            return [2, pointObj]//返回点对象
                     }
                 }))
             }))
@@ -254,14 +310,14 @@ define("dzqTestPlugin", ["require", "exports", "eDwTypes", "eDwCommandMgr", "eDw
         }
 
         //画线+框
-        function dzqSetLine(extSelObj, mMeasureMrg) {
+        function dzqSetLine(extSelObj, mMeasureMrg, rmkContent) {
             // var iColor = { r: 255, g: 50, b: 50 };
             var mWCEndPtHC0 = extSelObj.getPosition();
             // var mWCEndPntHC1 = { "x": -0.019599480563904592, "y": -0.016210202843822685, "z": 0.023380988009255255 };
 
             var mMeasureOp = mMeasureMrg.mMeasureOp;
             var MeasureAuxGeo = mMeasureOp.mMeasureEntities.mAuxGeoSelected;
-            var result = new DzqResultString('dzqTestA', 'dzqTestB');
+            var result = new DzqResultString('标注', rmkContent);
             MeasureAuxGeo.addMessage(result, mWCEndPtHC0, eDwTypes_14.HC.Color.red());
             MeasureAuxGeo.updateResultLabels();
 
