@@ -36,10 +36,11 @@
         <input type="button" id="btnDzqHideShow" value="隐藏/显示">
         <input type="button" id="btnDzqExplosion" value="爆炸增大">
         <input type="button" id="btnSetViewOrientation" value="旋转">
-        <input type="button" id="btnSetPoint" value="画点">
+        <input type="button" id="btnSetPoint" value="还原点">
         <input type="button" id="btnRemovePoint" value="移除点">
         <input type="button" id="btnSetLine" value="画线">
         <input type="input" id="remarkInput" value="">
+        <input type="checkbox" id="setPointCK" name="setPointCK" checked />
     </div>
     <!-- <div id="dzq-testMarkUp">
         <div id="plmMarkUpContent"  class="dzq-markUp">dzqTest</div>
@@ -19416,7 +19417,9 @@ define("eDwUIBaseEventHandlers", ["require", "exports", "eDwEventMgr", "eDwUIHTM
             }))
         };
         eDwUIBaseEventHandlers.prototype.onResize = function (iEvent, iViewer) {
-            if (iViewer) iViewer.HCViewer.resizeCanvas();
+            if (iViewer) {
+                iViewer.HCViewer.resizeCanvas();
+            }
             l_onResize()
         };
         eDwUIBaseEventHandlers.prototype.setOneLayerVisibility = function (layerName, isVisible) {

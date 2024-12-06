@@ -1,34 +1,6 @@
 var testData = [
     {
         cameraHC: {
-            "_position": { "x": -0.36782525120971576, "y": 0.031138495089523446, "z": 0.8226964153474813 },
-            "_target": { "x": -0.06658873274444943, "y": 0.009220431872186685, "z": -0.008505636931538163 },
-            "_up": { "x": -0.5862569573367369, "y": -0.7871149551127813, "z": -0.1917102694486548 },
-            "_width": 0.10674301907061828,
-            "_height": 0.10674301907061828,
-            "_projection": 0,
-            "_nearLimit": 0.01,
-            "_cameraFlags": 0
-        },
-        position: { x: 787, y: 399 },
-        content: 'testAAA'
-    },
-    {
-        cameraHC: {
-            "_position": { "x": 0.6816282541660722, "y": 0.3537322449423354, "z": -1.0733480868543144 },
-            "_target": { "x": -0.006859464309613223, "y": 0.006562212976345454, "z": 0.024573252204699249 },
-            "_up": { "x": 0.7594967898327307, "y": -0.581017712610704, "z": 0.29254579789564996 },
-            "_width": 0.1619331133752787,
-            "_height": 0.1619331133752787,
-            "_projection": 0,
-            "_nearLimit": 0.01,
-            "_cameraFlags": 0
-        },
-        position: { x: 1006, y: 327 },
-        content: 'testBBB'
-    },
-    {
-        cameraHC: {
             "_position": { "x": -0.01411583307297489, "y": -0.03465556234925549, "z": -0.275444015259687 },
             "_target": { "x": -0.03250801488302456, "y": -0.01879923961967077, "z": 0.006605229477571949 },
             "_up": { "x": -0.27013356300722665, "y": 0.9601573930895815, "z": -0.0715935655798729 },
@@ -38,16 +10,51 @@ var testData = [
             "_nearLimit": 0.01,
             "_cameraFlags": 0
         },
-        position: { x: 891, y: 424 },
+        position: { x: 891, y: 424, client: { width: 1872, height: 964 } },
         content: 'testCCC'
     }
 ]
 
+//获取真实位置，TODO:
+let getRealPos = function (pos) {
+    if (!pos.client) {
+        return pos;
+    }
+
+    let dw = document.documentElement.clientWidth;
+    let dh = document.documentElement.clientHeight;
+    return {
+        x: pos.x - (pos.client.width - dw) / 2,
+        y: pos.y - (pos.client.height - dh) / 2
+    }
+}
+
+var DzqResultString = function () {
+    function DzqResultString(iLocalizableName, iLocalizeableValue) {
+        this.mLocalizableName = iLocalizableName;
+        this.mLocalizeableValue = iLocalizeableValue;
+        return this
+    }
+
+    Object.defineProperty(DzqResultString.prototype, "Name", {
+        get: function () {
+            return this.mLocalizableName;
+        }, enumerable: false, configurable: true
+    });
+    Object.defineProperty(DzqResultString.prototype, "Value", {
+        get: function () {
+            return this.mLocalizeableValue;
+        }, enumerable: false, configurable: true
+    });
+
+    return DzqResultString
+}();
+
 
 define("dzqTestPlugin", ["require", "exports", "eDwTypes", "eDwCommandMgr", "eDwSetHierNodeAttribsCmd", "eDwShowOnlyCmd", "eDwUIUtils",
-    "eDwEventMgr", "eDwUIShortcutMenu", "eDwKeyMgr", "eDwEvents", "eDwUIBasePlugin", "utils", "jqutils", "eDwMeasureEntities", "eDwMeasureMgr", "eDwUILocalize"],
+    "eDwEventMgr", "eDwUIShortcutMenu", "eDwKeyMgr", "eDwEvents", "eDwUIBasePlugin", "utils", "jqutils", "eDwMeasureEntities", "eDwMeasureMgr", "eDwUILocalize", "dzqTestOperator"],
     (function (require, exports, eDwTypes_14, eDwCommandMgr, eDwSetHierNodeAttribsCmd, eDwShowOnlyCmd, eDwUIUtils,
-        eDwEventMgr, eDwUIShortcutMenu_4, eDwKeyMgr_4, eDwEvents_7, eDwUIBasePlugin_1, utils, jqutils, eDwMeasureEntities, eDwMeasureMgr, eDwUILocalize_1) {
+        eDwEventMgr, eDwUIShortcutMenu_4, eDwKeyMgr_4, eDwEvents_7, eDwUIBasePlugin_1, utils, jqutils, eDwMeasureEntities, eDwMeasureMgr, eDwUILocalize_1, dzqTestOperator) {
         "use strict";
         console.log(`dzq Log：dzqTestPlugin`)
 
@@ -55,26 +62,7 @@ define("dzqTestPlugin", ["require", "exports", "eDwTypes", "eDwCommandMgr", "eDw
             return eDwUILocalize_1.eDwUILocalize.getString.bind(null, iKey)
         }
 
-        var DzqResultString = function () {
-            function DzqResultString(iLocalizableName, iLocalizeableValue) {
-                this.mLocalizableName = iLocalizableName;
-                this.mLocalizeableValue = iLocalizeableValue;
-                return this
-            }
-
-            Object.defineProperty(DzqResultString.prototype, "Name", {
-                get: function () {
-                    return this.mLocalizableName;
-                }, enumerable: false, configurable: true
-            });
-            Object.defineProperty(DzqResultString.prototype, "Value", {
-                get: function () {
-                    return this.mLocalizeableValue;
-                }, enumerable: false, configurable: true
-            });
-
-            return DzqResultString
-        }();
+       
 
         var dzqTestPlugin = function (_super) {
             __extends(dzqTestPlugin, _super);
@@ -138,9 +126,11 @@ define("dzqTestPlugin", ["require", "exports", "eDwTypes", "eDwCommandMgr", "eDw
                 })
                 $('#btnSetViewOrientation').on('click', (e) => {
                     // iViewer.HCViewer.setViewOrientation(eDwTypes_14.HC.ViewOrientation.Bottom)//顶层方法
+                    var testCameraHC = testData[0].cameraHC;
                     dzqSetCamera(iViewer, testCameraHC, 400);
                 })
                 $('#btnRemovePoint').on('click', (e) => {
+                    let testPosition = testData[0].position;
                     return __awaiter(_this, void 0, void 0, (function () {
                         var extSelObj, idx, isAdded;
                         var mMeasureOp = mMeasureMrg.mMeasureOp;
@@ -178,7 +168,7 @@ define("dzqTestPlugin", ["require", "exports", "eDwTypes", "eDwCommandMgr", "eDw
                         return __generator(this, (function (_a) {
                             if (_a.label < testData.length) {
                                 var idx = _a.label;
-                                return [4, drawRemark(_this, iViewer, testData[idx])];
+                                return [4, this.dzqTestOperator.drawRemark(_this, iViewer, testData[idx])];
                             }
                             else {
                                 _a.sent();
@@ -197,162 +187,235 @@ define("dzqTestPlugin", ["require", "exports", "eDwTypes", "eDwCommandMgr", "eDw
                 })
             }
             dzqTestPlugin.prototype.init = function () {
-                // console.log(`dzqTestPlugin init`)
+                return __awaiter(this, void 0, void 0, (function () {
+                    return __generator(this, (function (_a) {
+                        switch (_a.label) {
+                            case 0:
+                                this.dzqTestOperator = new dzqTestOperator(this.mViewer, this);
+                                this.mViewer.OperatorMgr.registerCustomOperator(this.dzqTestOperator, true);
+                                return [2]
+                        }
+                    }))
+                }))
             };
             return dzqTestPlugin;
         }(eDwUIBasePlugin_1.eDwUIBasePlugin);
-
-        function drawRemark(_this, iViewer, remarkInfo) {
-
-            var testCameraHC = remarkInfo.cameraHC;
-            var testPosition = remarkInfo.position;
-            var rmkContent = remarkInfo.content;
-            var mMeasureMrg = new eDwMeasureMgr(iViewer);
-
-            __awaiter(_this, void 0, void 0, (function () {
-                return __generator(this, (function (_a) {
-                    switch (_a.label) {
-                        case 0:
-                            return [4, dzqSetCamera(iViewer, testCameraHC)];
-                        case 1:
-                            return [4, dzqSetPoint(_this, mMeasureMrg, eDwMeasureEntities, iViewer, utils, testPosition)];
-                        case 2:
-                            var pointObj = _a.sent();
-                            return [4, dzqSetLine(pointObj, mMeasureMrg, rmkContent)];
-                        case 3:
-                            return [2];
-                    }
-                }))
-            }))
-        }
-
-        //还原摄像机坐标
-        function dzqSetCamera(iViewer, rmkCameraHC, iDuration) {
-            // var centerHC = iViewer.getModel().getBoundingBox().center();
-            var viewHC = iViewer.getHCView();
-            var cameraHC = viewHC.getCamera().copy();
-            // var upVecHC = cameraHC.getUp();
-            // var eyeVecHC = cameraHC.getTarget().subtract(cameraHC.getPosition());
-            // var dist = eyeVecHC.length();
-
-            // eyeVecHC.set(0, 0, 1).scale(dist);
-            // upVecHC.set(0, 1, 0);
-
-            // eyeVecHC.set(1, 1, 1).normalize().scale(dist);
-
-            // iViewer.ViewMgr.adjustOrientation(eyeVecHC, upVecHC);
-            // cameraHC.setPosition(eyeVecHC.add(centerHC));
-            // cameraHC.setUp(upVecHC);
-
-            /*todo:
-            根据JSON还原指定的比例+坐标：
-            done1、找出坐标数据对象
-            done2、找出比例数据
-            done3、还原坐标
-            done4、还原比例
-            */
-            Object.assign(cameraHC._position, rmkCameraHC._position);
-            Object.assign(cameraHC._target, rmkCameraHC._target);
-            Object.assign(cameraHC._up, rmkCameraHC._up);
-            cameraHC._width = rmkCameraHC._width;
-            cameraHC._height = rmkCameraHC._height;
-            cameraHC._projection = rmkCameraHC._projection;
-            cameraHC._nearLimit = rmkCameraHC._nearLimit;
-            cameraHC._cameraFlags = rmkCameraHC._cameraFlags;
-
-            iDuration = iDuration ?? 0;//动画延时
-            // viewHC.fitWorld(iDuration, cameraHC);
-            viewHC.setCamera(cameraHC, iDuration);
-        }
-
-        //还原点的位置
-        function dzqSetPoint(_this, mMeasureMrg, eDwMeasureEntities, iViewer, utils, rmkPosition) {
-            var pointObj; //todo:如何返回到上层
-            return __awaiter(_this, void 0, void 0, (function () {
-                var idx, isAdded;
-                //一个mMeasureMrg只能画一个点
-                var mMeasureOp = mMeasureMrg.mMeasureOp;
-                return __generator(this, (function (_a) {
-                    switch (_a.label) {
-                        case 0:
-                            mMeasureOp.resetTempHighlight();
-                            return [4, iViewer.ViewMgr.pickFromPoint(rmkPosition, mMeasureOp.getPickConfig())];
-                        case 1:
-                            pointObj = _a.sent();//点对象
-                            idx = mMeasureOp.mMeasureEntities.isItemSelected(pointObj);//点对象序号
-                            if (eDwMeasureEntities.PointToPoint || !utils.isNumber(idx)) {
-                                return [3, 3];
-                            }
-                            //移除点
-                            return [4, mMeasureOp.mMeasureEntities.removeEntityAtIndex(idx)];
-                        case 2:
-                            _a.sent();
-                            return [2];
-                        case 3:
-                            //点对象附加
-                            return [4, mMeasureOp.mMeasureEntities.addEntity(pointObj)];
-                        case 4:
-                            isAdded = _a.sent();
-                            if (isAdded) {
-                                //高亮整个零件(注释了只高亮面，效果更好)
-                                // mMeasureOp.highlightMeasuringItem(pointObj)
-                            } else {
-                                mMeasureOp.dehighlightMeasuringItems()
-                            }
-                            return [2, pointObj]//返回点对象
-                    }
-                }))
-            }))
-
-
-            //方案2：
-            // setPoint2(eDwUIUtils, iViewer);
-        }
-
-        //画线+框
-        function dzqSetLine(extSelObj, mMeasureMrg, rmkContent) {
-            // var iColor = { r: 255, g: 50, b: 50 };
-            var mWCEndPtHC0 = extSelObj.getPosition();
-            // var mWCEndPntHC1 = { "x": -0.019599480563904592, "y": -0.016210202843822685, "z": 0.023380988009255255 };
-
-            var mMeasureOp = mMeasureMrg.mMeasureOp;
-            var MeasureAuxGeo = mMeasureOp.mMeasureEntities.mAuxGeoSelected;
-            var result = new DzqResultString('标注', rmkContent);
-            MeasureAuxGeo.addMessage(result, mWCEndPtHC0, eDwTypes_14.HC.Color.red());
-            MeasureAuxGeo.updateResultLabels();
-
-            // setLine2(iViewer, eDwTypes_14, iColor, mWCEndPtHC0, mWCEndPntHC1);
-
-            // document.addEventListener("mousemove", function () {
-            //     setLine2(iViewer, eDwTypes_14, iColor, mWCEndPtHC0, mWCEndPntHC1);
-            // })
-
-            /*-、
-            有多个图层
-            div，edrawings-canvas-canvas-container，3D图
-            svg，edrawings-canvas-svg，点+线+标签
-            svg, edrawings-canvas-redline-svg，？？
-            问题：
-            -、done如何操作对应svg
-            -、方法1：鼠标拖动+滚轮对应的点事件_dragStarted，在事件上触发线重绘
-               -1.1:dzq插件如何绑定滚动+拖动事件
-            -、方法2：svg点线如何随转动+滚动更新，调用方法重绘线
-            -、方法3：阻止线的清除，弄清楚为啥鼠标移动线就被移除了？(renderMarkup时，非_markupItems里的会被清掉)
-               -、研究更新点线坐标原理
-            */
-
-            //以下test 画线（顶层调用）
-            //var mMeasureOp = mMeasureMrg.mMeasureOp;
-            // var ioAuxGeo = mMeasureOp.mMeasureEntities.mAuxGeoImmediate;
-            // var cLocalizedInvalidCombo = l_binder("Strings.InvalidCombination");
-            // var cLocalizedInfo = l_binder("Strings.Info");
-            // var result =   MeasureResultString(cLocalizedInfo, cLocalizedInvalidCombo);
-            // var selObjPosition = extSelObj.getPosition();//{x,y,z}
-            // ioAuxGeo.addMessage(result, selObjPosition, eDwTypes_14.HC.Color.red());
-            // ioAuxGeo.updateResultLabels();
-        }
-
         return dzqTestPlugin;
+    }));
+
+define("dzqTestOperator", ["require", "exports", "eDwSelObj", "eDwBaseSelOperator", "eDwMeasureEntities", "eDwMeasureMgr", "eDwTypes", "hcutils", "utils"],
+    (function (require, exports, eDwSelObj, eDwBaseSelOperator, eDwMeasureEntities, eDwMeasureMgr, eDwTypes_2, hcutils_2, utils) {
+        "use strict";
+        var dzqTestOperator = function (_super) {
+            __extends(dzqTestOperator, _super);
+
+            function dzqTestOperator(iViewer) {
+                var _this = _super.call(this, iViewer, iViewer.SelectionMgr) || this;
+                _this.mTempHighlightItem = null;
+                _this.mOperatingLabel = false;
+                _this.mSelObjs = [];
+                _this.mMarkupMgrHC = _this.Viewer.getHCMarkupManager();
+                _this.mHighlightColor = new eDwTypes_2.HC.Color(72, 219, 251);
+                _this.mMeasureEntities = new eDwMeasureEntities(_this.Viewer);
+                _this.mMeasureMode = eDwTypes_2.EntityMode.ALL;
+                return _this
+            }
+
+
+            dzqTestOperator.prototype.onMouseMove = function(ioEvent){
+
+            };
+            dzqTestOperator.prototype.onMouseUp = function (ioEvent) {
+                let setPointCK = $('#setPointCK').prop('checked');
+                if(!setPointCK){
+                    return;
+                }
+                return __awaiter(this, void 0, void 0, (function () {
+                    return __generator(this, (function (_a) {
+                        switch (_a.label) {
+                            case 0:
+                                let pos = ioEvent.getPosition();
+                                let remarkInfo = {
+                                    cameraHC: this.Viewer.getHCView().getCamera(),
+                                    position: pos,
+                                    content: '空'
+                                }
+
+                                return [4, this.drawRemark(this, this.Viewer, remarkInfo)];
+                            case 1:
+                                ioEvent.setHandled(true);
+                                _super.prototype.onMouseUp.call(this, ioEvent);
+                                return [2]
+                        }
+                    }))
+                }))
+            };
+
+            dzqTestOperator.prototype.drawRemark = function (_this, iViewer, remarkInfo) {
+
+                var testCameraHC = remarkInfo.cameraHC;
+                var testPosition = getRealPos(remarkInfo.position);
+                var rmkContent = remarkInfo.content;
+                var mMeasureMrg = new eDwMeasureMgr(iViewer);
+
+                __awaiter(_this, void 0, void 0, (function () {
+                    return __generator(this, (function (_a) {
+                        switch (_a.label) {
+                            case 0:
+                                return [4, dzqSetCamera(iViewer, testCameraHC)];
+                            case 1:
+                                return [4, dzqSetPoint(_this, mMeasureMrg, eDwMeasureEntities, iViewer, utils, testPosition)];
+                            case 2:
+                                var pointObj = _a.sent();
+                                return [4, dzqSetLine(pointObj, mMeasureMrg, rmkContent)];
+                            case 3:
+                                return [2];
+                        }
+                    }))
+                }))
+            }
+
+            //还原摄像机坐标
+            function dzqSetCamera(iViewer, rmkCameraHC, iDuration) {
+                // var centerHC = iViewer.getModel().getBoundingBox().center();
+                var viewHC = iViewer.getHCView();
+                var cameraHC = viewHC.getCamera().copy();
+                // var upVecHC = cameraHC.getUp();
+                // var eyeVecHC = cameraHC.getTarget().subtract(cameraHC.getPosition());
+                // var dist = eyeVecHC.length();
+
+                // eyeVecHC.set(0, 0, 1).scale(dist);
+                // upVecHC.set(0, 1, 0);
+
+                // eyeVecHC.set(1, 1, 1).normalize().scale(dist);
+
+                // iViewer.ViewMgr.adjustOrientation(eyeVecHC, upVecHC);
+                // cameraHC.setPosition(eyeVecHC.add(centerHC));
+                // cameraHC.setUp(upVecHC);
+
+                /*todo:
+                根据JSON还原指定的比例+坐标：
+                done1、找出坐标数据对象
+                done2、找出比例数据
+                done3、还原坐标
+                done4、还原比例
+                */
+                Object.assign(cameraHC._position, rmkCameraHC._position);
+                Object.assign(cameraHC._target, rmkCameraHC._target);
+                Object.assign(cameraHC._up, rmkCameraHC._up);
+                cameraHC._width = rmkCameraHC._width;
+                cameraHC._height = rmkCameraHC._height;
+                cameraHC._projection = rmkCameraHC._projection;
+                cameraHC._nearLimit = rmkCameraHC._nearLimit;
+                cameraHC._cameraFlags = rmkCameraHC._cameraFlags;
+
+                iDuration = iDuration ?? 0;//动画延时
+                // viewHC.fitWorld(iDuration, cameraHC);
+                viewHC.setCamera(cameraHC, iDuration);
+            }
+
+            //还原点的位置
+            function dzqSetPoint(_this, mMeasureMrg, eDwMeasureEntities, iViewer, utils, rmkPosition) {
+                var pointObj; //todo:如何返回到上层
+                return __awaiter(_this, void 0, void 0, (function () {
+                    var idx, isAdded;
+                    //一个mMeasureMrg只能画一个点
+                    var mMeasureOp = mMeasureMrg.mMeasureOp;
+                    return __generator(this, (function (_a) {
+                        switch (_a.label) {
+                            case 0:
+                                mMeasureOp.resetTempHighlight();
+                                return [4, iViewer.ViewMgr.pickFromPoint(rmkPosition, mMeasureOp.getPickConfig())];
+                            case 1:
+                                pointObj = _a.sent();//点对象
+                                idx = mMeasureOp.mMeasureEntities.isItemSelected(pointObj);//点对象序号
+                                if (eDwMeasureEntities.PointToPoint || !utils.isNumber(idx)) {
+                                    return [3, 3];
+                                }
+                                //移除点
+                                return [4, mMeasureOp.mMeasureEntities.removeEntityAtIndex(idx)];
+                            case 2:
+                                _a.sent();
+                                return [2];
+                            case 3:
+                                //点对象附加
+                                return [4, mMeasureOp.mMeasureEntities.addEntity(pointObj)];
+                            case 4:
+                                isAdded = _a.sent();
+                                if (isAdded) {
+                                    //高亮整个零件(注释了只高亮面，效果更好)
+                                    // mMeasureOp.highlightMeasuringItem(pointObj)
+                                } else {
+                                    mMeasureOp.dehighlightMeasuringItems()
+                                }
+                                return [2, pointObj]//返回点对象
+                        }
+                    }))
+                }))
+
+
+                //方案2：
+                // setPoint2(eDwUIUtils, iViewer);
+            }
+
+            //画线+框
+            function dzqSetLine(extSelObj, mMeasureMrg, rmkContent) {
+                // var iColor = { r: 255, g: 50, b: 50 };
+                var mWCEndPtHC0 = extSelObj.getPosition();
+                // var mWCEndPntHC1 = { "x": -0.019599480563904592, "y": -0.016210202843822685, "z": 0.023380988009255255 };
+
+                var mMeasureOp = mMeasureMrg.mMeasureOp;
+                var MeasureAuxGeo = mMeasureOp.mMeasureEntities.mAuxGeoSelected;
+                var result = new DzqResultString('标注', rmkContent);
+                MeasureAuxGeo.addMessage(result, mWCEndPtHC0, eDwTypes_2.HC.Color.red());
+                MeasureAuxGeo.updateResultLabels();
+
+                // setLine2(iViewer, eDwTypes_2, iColor, mWCEndPtHC0, mWCEndPntHC1);
+
+                // document.addEventListener("mousemove", function () {
+                //     setLine2(iViewer, eDwTypes_2, iColor, mWCEndPtHC0, mWCEndPntHC1);
+                // })
+
+                /*-、
+                有多个图层
+                div，edrawings-canvas-canvas-container，3D图
+                svg，edrawings-canvas-svg，点+线+标签
+                svg, edrawings-canvas-redline-svg，？？
+                问题：
+                -、done如何操作对应svg
+                -、方法1：鼠标拖动+滚轮对应的点事件_dragStarted，在事件上触发线重绘
+                   -1.1:dzq插件如何绑定滚动+拖动事件
+                -、方法2：svg点线如何随转动+滚动更新，调用方法重绘线
+                -、方法3：阻止线的清除，弄清楚为啥鼠标移动线就被移除了？(renderMarkup时，非_markupItems里的会被清掉)
+                   -、研究更新点线坐标原理
+                */
+
+                //以下test 画线（顶层调用）
+                //var mMeasureOp = mMeasureMrg.mMeasureOp;
+                // var ioAuxGeo = mMeasureOp.mMeasureEntities.mAuxGeoImmediate;
+                // var cLocalizedInvalidCombo = l_binder("Strings.InvalidCombination");
+                // var cLocalizedInfo = l_binder("Strings.Info");
+                // var result =   MeasureResultString(cLocalizedInfo, cLocalizedInvalidCombo);
+                // var selObjPosition = extSelObj.getPosition();//{x,y,z}
+                // ioAuxGeo.addMessage(result, selObjPosition, eDwTypes_2.HC.Color.red());
+                // ioAuxGeo.updateResultLabels();
+            }
+
+            return dzqTestOperator
+        }(eDwBaseSelOperator);
+
+        function l_isAllowedSelection(iSelObj, iMeasureMode) {
+            if (iSelObj && iSelObj.getSelectionType() === eDwTypes_2.HC.SelectionType.None) {
+                return true
+            }
+            var subEntityInfo = eDwSelObj.getSubEntityInfo(iSelObj);
+            if (subEntityInfo && subEntityInfo.SubEntity && subEntityInfo.IsSelectable && (iSelObj.getPointEntity() && iMeasureMode & eDwTypes_2.EntityMode.VERTEX) || iSelObj.getLineEntity() && iMeasureMode & eDwTypes_2.EntityMode.EDGE || iSelObj.getFaceEntity() && iMeasureMode & eDwTypes_2.EntityMode.FACE) {
+                return true
+            }
+            return false
+        }
+
+        return dzqTestOperator
     }));
 
 
