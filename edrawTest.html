@@ -39,6 +39,7 @@
         <input type="button" id="btnSetPoint" value="还原点">
         <input type="button" id="btnRemovePoint" value="移除点">
         <input type="button" id="btnSetLine" value="画线">
+        <input type="button" id="btnUpdateRemark" value="更新批注">
         <input type="input" id="remarkInput" value="">
         <input type="checkbox" id="setPointCK" name="setPointCK" checked />
     </div>
@@ -742,6 +743,23 @@
         </table>
     </div>
 </body>
+
+<template id="dzqRemarkTemp">
+    <div class="dzqRemark">
+        <div class="portraitContainer"><div class="portrait"></div></div>
+        <div class="remarkInfoContainer">
+            <div class="userName">熊大头</div>
+            <div class="remarkContent">这个位置有问题重新设计下吧</div>
+            <div class="remarkTime">2024/01/01 12:00 来自流程单据LC123467895</div>
+        </div>
+    </div>
+</template>
+
+<template id="dzqPointTemp">
+    <div class="dzqPoint">
+        
+    </div>
+</template>
 
 
 <script>
@@ -3641,7 +3659,7 @@ define("eDwMeasureEntities", ["require", "exports", "eDwEventMgr", "eDwSelObj", 
                             if (!isValid && n > 0) {
                                 result = new MeasureResultString(cLocalizedInfo, cLocalizedInvalidCombo);
                                 var selObjPosition = iSelObjs[n - 1].getPosition();
-                                console.log('dzq-获取点位置');
+                                console.log('dzq-无效判断');
                                 ioAuxGeo.addMessage(result, selObjPosition, eDwTypes_1.HC.Color.red())
                             }
                             ioAuxGeo.updateResultLabels();
@@ -4291,6 +4309,9 @@ define("eDwMeasureEntities", ["require", "exports", "eDwEventMgr", "eDwSelObj", 
             this.setLabelPosition(this.mLeader.getLeaderEndPos());
             var n = this.mItems.length;
             if (0 === n) return;
+
+            var drawDzqBox = window.dzqTestPlugin.utils.onDrawEdwLabel(this);
+            if(drawDzqBox) return 
             this.mLeader.draw();
             for (var i = 0; i < n; ++i) {
                 this.mItems[i].drawItem()
@@ -5469,7 +5490,10 @@ define("eDwMeasureEntities", ["require", "exports", "eDwEventMgr", "eDwSelObj", 
             for (var i = 0; i < this.mPntData.length; ++i) {
                 var pntData = this.mPntData[i];
                 pntData.Circle.setCenter(eDwTypes_1.HC.Point2.fromPoint3(viewHC.projectPoint(pntData.SelObj.getPosition())));
-                renderer.drawCircle(pntData.Circle)
+                var drawPLMPoint = window.dzqTestPlugin.utils.onDrawCircle(this.mViewer, pntData);
+                if(!drawPLMPoint){
+                    renderer.drawCircle(pntData.Circle)
+                }
             }
         };
         return MeasureAuxPick
@@ -5675,7 +5699,7 @@ define("eDwMeasureEntities", ["require", "exports", "eDwEventMgr", "eDwSelObj", 
                     labelsToBeDistributed = this.mInfoLabels.slice().concat(this.mResultLabels)
                 }
             }
-            this.distributeLabels(labelsToBeDistributed);
+            this.distributeLabels(labelsToBeDistributed);  
             if (!this.mImmediateDrawMode) {
                 this.addMarkupLabels()
             }

@@ -5649,12 +5649,13 @@ var __generator = this && this.__generator || function (operator, eventFunc) {
 (function (d) {
     (function (h) {
         var g = function () {
-            function a(a, c, b, f, k) {
+            function a(a, c, b, f, k, dzqSVG) {
                 this._container = a;
                 this._canvasContainerElement = c;
                 this._markupSvgElement = b;
                 this._redlineSvgElement = f;
-                this._redlineElement = k
+                this._redlineElement = k;
+                this._dzqSVG = dzqSVG;
             }
             a.prototype.getCanvasContainerElement = function () {
                 return this._canvasContainerElement
@@ -5667,6 +5668,9 @@ var __generator = this && this.__generator || function (operator, eventFunc) {
             };
             a.prototype.getRedlineElement = function () {
                 return this._redlineElement
+            };
+            a.prototype.getdzqSVGElement = function () {
+                return this._dzqSVG
             };
             a.prototype.shutdown =
             function () {
@@ -5704,7 +5708,11 @@ var __generator = this && this.__generator || function (operator, eventFunc) {
                 f.style.height = "100%";
                 f.style.pointerEvents = "none";
                 e.appendChild(f);
-                return new a(e, l, b, k, f)
+                //region dzq
+                var dzqSVG = a._createSvgElement('edrawings-canvas-dzq-svg');
+                e.appendChild(dzqSVG);
+                //end region
+                return new a(e, l, b, k, f, dzqSVG)
             };
             a.createFromId = function (a) {
                 a = document.getElementById(a);
@@ -18863,6 +18871,14 @@ var SC;
                     a._sceneReady()
                 },
                 renderComplete: function () {
+                    var itemMap = a.markupManager._itemManager._markupItems.entries().next().value;
+                    if(itemMap){
+                        var view = itemMap[1].mViewer.getHCView();
+                        var c = view._engine.getSynchedProjectionMatrix();
+                        var b = view._engine.getSynchedViewMatrix();
+                    }
+                   
+
                     a._renderComplete()
                 },
                 streamingActivated: function () {
@@ -32810,7 +32826,7 @@ var SC;
 (function (d) {
     (function (h) {
         var g = function () {
-            function a(a, c, b) {
+            function MarkupItemManager(a, c, b) {
                 this._markupItems = new Map;
                 this._selectedMarkup = this._activeView = null;
                 this._pendingUpdateHandleTimer = new d.Util.Timer;
@@ -32819,14 +32835,14 @@ var SC;
                 this._domElements = c;
                 this._markupRenderer = b
             }
-            a.prototype.shutdown = function () {
+            MarkupItemManager.prototype.shutdown = function () {
                 this.setActiveView(null);
                 this._markupItems.forEach(function (a) {
                     a.remove()
                 });
                 this._markupItems.clear()
             };
-            a.prototype._updateLater = function (a) {
+            MarkupItemManager.prototype._updateLater = function (a) {
                 var c = this;
                 this._pendingUpdateHandleTimer.isIdle(0) && this._pendingUpdateHandleTimer.set(0,
                     function () {
@@ -32836,27 +32852,27 @@ var SC;
                     a.resolve()
                 })
             };
-            a.prototype.updateLater = function () {
+            MarkupItemManager.prototype.updateLater = function () {
                 this._updateLater(null)
             };
-            a.prototype.update = function () {
+            MarkupItemManager.prototype.update = function () {
                 this._pendingUpdateHandleTimer.clear();
                 this.renderMarkup();
-                this.renderActiveViewMarkup()
+                this.renderActiveViewMarkup();
             };
-            a.prototype.registerMarkupItem = function (a) {
+            MarkupItemManager.prototype.registerMarkupItem = function (a) {
                 var c = d.UUID.create();
                 this._markupItems.set(c, a);
                 return c
             };
-            a.prototype.unregisterMarkupItem = function (a) {
+            MarkupItemManager.prototype.unregisterMarkupItem = function (a) {
                 var c = this._markupItems.get(a);
                 c && (c.remove && c.remove(), this._markupItems.delete(a))
             };
-            a.prototype.getActiveView = function () {
+            MarkupItemManager.prototype.getActiveView = function () {
                 return this._activeView
             };
-            a.prototype.setActiveView = function (a) {
+            MarkupItemManager.prototype.setActiveView = function (a) {
                 return __awaiter(this, void 0, void 0, function () {
                     var c,
                     b,
@@ -32894,7 +32910,7 @@ var SC;
                     })
                 })
             };
-            a.prototype.renderMarkup = function () {
+            MarkupItemManager.prototype.renderMarkup = function () {
                 this._markupRenderer._setCanvas(this._domElements.getMarkupSvgElement());
                 this._markupRenderer._clear();
                 this._markupItems.forEach(function (a) {
@@ -32902,7 +32918,7 @@ var SC;
                 });
                 this._markupRenderer._finalize()
             };
-            a.prototype.renderActiveViewMarkup = function () {
+            MarkupItemManager.prototype.renderActiveViewMarkup = function () {
                 this._markupRenderer._setCanvas(this._domElements.getRedlineSvgElement());
                 this._markupRenderer._clear();
                 if (this._activeView) {
@@ -32911,13 +32927,13 @@ var SC;
                     this._markupRenderer._finalize()
                 }
             };
-            a.prototype.getPickTolerance = function () {
+            MarkupItemManager.prototype.getPickTolerance = function () {
                 return this._pickTolerance
             };
-            a.prototype.setPickTolerance = function (a) {
+            MarkupItemManager.prototype.setPickTolerance = function (a) {
                 this._pickTolerance = a
             };
-            a.prototype.pick = function (a) {
+            MarkupItemManager.prototype.pick = function (a) {
                 var c = this;
                 if (this._activeView)
                     for (var b = 0, d = this._activeView.getMarkup(); b < d.length; b++) {
@@ -32932,17 +32948,17 @@ var SC;
                 });
                 return g
             };
-            a.prototype.select = function (a) {
+            MarkupItemManager.prototype.select = function (a) {
                 if (this._selectedMarkup && a !== this._selectedMarkup)
                     this._selectedMarkup.onDeselect();
                 if (this._selectedMarkup = a)
                     this._selectedMarkup.onSelect();
                 this.update()
             };
-            a.prototype.getSelected = function () {
+            MarkupItemManager.prototype.getSelected = function () {
                 return this._selectedMarkup
             };
-            return a
+            return MarkupItemManager
         }
         ();
         h.MarkupItemManager = g
@@ -33134,7 +33150,7 @@ var SC;
                     this._position.assign(b)
                 };
                 b.prototype.getTextString = function () {
-                    return this._textStr
+                    return this._textStr ?? 'dzqTest'
                 };
                 b.prototype.setTextString = function (b) {
                     this._textStr = b
@@ -33177,7 +33193,7 @@ var SC;
         ();
         h._MarkupViewConstruction = g;
         var a = function () {
-            function a(a, b, d, e, g, h) {
+            function MarkupView(a, b, d, e, g, h) {
                 void 0 === h && (h = null);
                 this._faceVisibility = this._lineVisibility = !0;
                 this._markupItems = new Set;
@@ -33193,86 +33209,86 @@ var SC;
                 this._cuttingPlaneData = g;
                 this._sheetId = h
             }
-            a.prototype.getCamera = function () {
+            MarkupView.prototype.getCamera = function () {
                 return this._camera
             };
-            a.prototype.getSheetId = function () {
+            MarkupView.prototype.getSheetId = function () {
                 return this._sheetId
             };
-            a.prototype.getUniqueId = function () {
+            MarkupView.prototype.getUniqueId = function () {
                 return this._uniqueId
             };
-            a.prototype.getName = function () {
+            MarkupView.prototype.getName = function () {
                 return this._name
             };
-            a.prototype.setName = function (a) {
+            MarkupView.prototype.setName = function (a) {
                 this._name = a
             };
-            a.prototype.getLineVisibility = function () {
+            MarkupView.prototype.getLineVisibility = function () {
                 return this._lineVisibility
             };
-            a.prototype.setLineVisibility = function (a) {
+            MarkupView.prototype.setLineVisibility = function (a) {
                 this._lineVisibility = a
             };
-            a.prototype.getFaceVisibility = function () {
+            MarkupView.prototype.getFaceVisibility = function () {
                 return this._faceVisibility
             };
-            a.prototype.setFaceVisibility = function (a) {
+            MarkupView.prototype.setFaceVisibility = function (a) {
                 this._faceVisibility =
                     a
             };
-            a.prototype.addMarkupItem = function (a) {
+            MarkupView.prototype.addMarkupItem = function (a) {
                 this._markupItems.add(a)
             };
-            a.prototype.getMarkup = function () {
+            MarkupView.prototype.getMarkup = function () {
                 return d.Util.setToArray(this._markupItems)
             };
-            a.prototype.removeMarkup = function (a) {
+            MarkupView.prototype.removeMarkup = function (a) {
                 a.remove();
                 return this._markupItems.delete(a)
             };
-            a.prototype.getCuttingPlaneData = function () {
+            MarkupView.prototype.getCuttingPlaneData = function () {
                 return this._cuttingPlaneData
             };
-            a.prototype.setCuttingPlaneData = function (a) {
+            MarkupView.prototype.setCuttingPlaneData = function (a) {
                 this._cuttingPlaneData = a
             };
-            a.prototype.getExplodeMagnitude = function () {
+            MarkupView.prototype.getExplodeMagnitude = function () {
                 return this._explodeMagnitude
             };
-            a.prototype.setExplodeMagnitude = function (a) {
+            MarkupView.prototype.setExplodeMagnitude = function (a) {
                 this._explodeMagnitude =
                     a
             };
-            a.prototype.getColorMap = function () {
+            MarkupView.prototype.getColorMap = function () {
                 return this._colorMap
             };
-            a.prototype.setColorMap = function (a) {
+            MarkupView.prototype.setColorMap = function (a) {
                 this._colorMap = a
             };
-            a.prototype.getDefaultVisibility = function () {
+            MarkupView.prototype.getDefaultVisibility = function () {
                 return this._defaultVisibility
             };
-            a.prototype.setDefaultVisibility = function (a) {
+            MarkupView.prototype.setDefaultVisibility = function (a) {
                 this._defaultVisibility = a
             };
-            a.prototype.getVisibilityExceptions = function () {
+            MarkupView.prototype.getVisibilityExceptions = function () {
                 return this._visibilityExceptions
             };
-            a.prototype.setVisibilityExceptions = function (a) {
+            MarkupView.prototype.setVisibilityExceptions = function (a) {
                 this._visibilityExceptions = a
             };
-            a.prototype.getSnapshotImage = function () {
+            MarkupView.prototype.getSnapshotImage = function () {
                 return this._snapshotImage
             };
-            a.prototype.setSnapshotImage =
+            MarkupView.prototype.setSnapshotImage =
             function (a) {
                 this._snapshotImage = a
             };
-            a.prototype._handleLoadMarkupItem = function (a) {
+            MarkupView.prototype._handleLoadMarkupItem = function (a) {
                 return a instanceof h.MarkupItem ? (this.addMarkupItem(a), !0) : !1
             };
-            a._fromJson = function (c, b) {
+            MarkupView._fromJson = function (c, b) {
                 return __awaiter(this, void 0, void 0, function () {
                     var f,
                     e,
@@ -33302,7 +33318,7 @@ var SC;
                             f = c;
                             e = d.Camera.fromJson(f.camera);
                             f.hasOwnProperty("sheetId") && f.sheetId && (h = parseInt(c.sheetId, 10), isNaN(h) || (l = h));
-                            m = new a(f.uniqueId, f.name, e, f.explodeMagnitude, f.cuttingData,
+                            m = new MarkupView(f.uniqueId, f.name, e, f.explodeMagnitude, f.cuttingData,
                                     l);
                             m.setLineVisibility(f.lineVisibility);
                             m.setFaceVisibility(f.faceVisibility);
@@ -33334,10 +33350,10 @@ var SC;
                     })
                 })
             };
-            a.prototype.toJson = function () {
+            MarkupView.prototype.toJson = function () {
                 return this._toJson()
             };
-            a.prototype._toJson = function () {
+            MarkupView.prototype._toJson = function () {
                 var a = {
                     uniqueId: this._uniqueId,
                     name: this._name,
@@ -33368,10 +33384,10 @@ var SC;
                 null !== this._snapshotImage && (a.imageSrc = this._snapshotImage.src);
                 return a
             };
-            a.prototype.forJson = function () {
+            MarkupView.prototype.forJson = function () {
                 return this.toJson()
             };
-            return a
+            return MarkupView
         }
         ();
         h.MarkupView = a
@@ -33835,18 +33851,18 @@ var SC;
 (function (d) {
     (function (h) {
         (function (g) {
-            var a = function () {
-                function a() {
+            var svgRenderer = function () {
+                function svgRenderer() {
                     this._svgDefsElement = this._svgCanvas = null;
                     this._svgElements = [];
                     this._svgTextElements = []
                 }
-                a.prototype._setCanvas = function (a) {
+                svgRenderer.prototype._setCanvas = function (a) {
                     this._svgCanvas = a;
                     this._svgDefsElement = document.createElementNS(g.Util.svgNamespace, "defs");
                     this._svgCanvas.appendChild(this._svgDefsElement)
                 };
-                a.prototype._clear = function () {
+                svgRenderer.prototype._clear = function () {
                     if (null === this._svgCanvas || null === this._svgDefsElement)
                         throw new d.CommunicatorError("canvas not set");
                     for (; this._svgCanvas.firstChild; )
@@ -33857,7 +33873,7 @@ var SC;
                         this._svgDefsElement.removeChild(this._svgDefsElement.firstChild);
                     this._svgCanvas.appendChild(this._svgDefsElement)
                 };
-                a.prototype._finalize = function () {
+                svgRenderer.prototype._finalize = function () {
                     if (null === this._svgCanvas)
                         throw new d.CommunicatorError("canvas not set");
                     for (var a = 0, b = this._svgElements; a < b.length; a++) {
@@ -33868,11 +33884,11 @@ var SC;
                     for (b = this._svgTextElements; a < b.length; a++)
                         f = b[a], this._svgCanvas.appendChild(f)
                 };
-                a.prototype.drawCircle = function (a) {
+                svgRenderer.prototype.drawCircle = function (a) {
                     return this._addCircleNode(a.getCenter(),
                         a.getRadius(), a)
                 };
-                a.prototype.drawCircles = function (a) {
+                svgRenderer.prototype.drawCircles = function (a) {
                     for (var b = [], c = 0, d = a.getCircles(); c < d.length; c++) {
                         var e = d[c];
                         e = this._addCircleNode(e.center, e.radius, a);
@@ -33880,10 +33896,10 @@ var SC;
                     }
                     return b
                 };
-                a.prototype.drawLine = function (a) {
+                svgRenderer.prototype.drawLine = function (a) {
                     return this._addLineElement(a.getP1(), a.getP2(), a)
                 };
-                a.prototype.drawLines = function (a) {
+                svgRenderer.prototype.drawLines = function (a) {
                     for (var b = [], c = 0, d = a.getLines(); c < d.length; c++) {
                         var e = d[c];
                         e = this._addLineElement(e.p1, e.p2, a);
@@ -33891,11 +33907,11 @@ var SC;
                     }
                     return b
                 };
-                a.prototype.drawText = function (a) {
+                svgRenderer.prototype.drawText = function (a) {
                     return this._addTextElement(a.getText(), a.getPosition(),
                         a)
                 };
-                a.prototype.drawTexts = function (a) {
+                svgRenderer.prototype.drawTexts = function (a) {
                     for (var b = [], c = 0, d = a.getStrings(); c < d.length; c++) {
                         var e = d[c];
                         e = this._addTextElement(e.text, e.position, a);
@@ -33903,7 +33919,7 @@ var SC;
                     }
                     return b
                 };
-                a.prototype.measureText = function (a, b) {
+                svgRenderer.prototype.measureText = function (a, b) {
                     if (null === this._svgCanvas)
                         throw new d.CommunicatorError("canvas not set");
                     a = this._createTextElement(a, d.Point2.zero(), b);
@@ -33913,7 +33929,7 @@ var SC;
                     this._svgCanvas.removeChild(a);
                     return b
                 };
-                a.prototype.measureTextBox = function (a) {
+                svgRenderer.prototype.measureTextBox = function (a) {
                     var b = this.measureText(a.getTextString(),
                             a.getTextPortion());
                     b.x += 2 * a.getBoxPortion().getStrokeWidth();
@@ -33922,20 +33938,20 @@ var SC;
                     b.y += 2 * a.getPadding();
                     return b
                 };
-                a.prototype.drawPolyline = function (a) {
+                svgRenderer.prototype.drawPolyline = function (a) {
                     return this._addPolylineElement(a.getPoints(), a)
                 };
-                a.prototype.drawPolylines = function (a) {
+                svgRenderer.prototype.drawPolylines = function (a) {
                     for (var b = [], c = 0, d = a.getPolylines(); c < d.length; c++) {
                         var e = this._addPolylineElement(d[c], a);
                         b.push(e)
                     }
                     return b
                 };
-                a.prototype.drawPolygon = function (a) {
+                svgRenderer.prototype.drawPolygon = function (a) {
                     return this._addPolygonElement(a.getPoints(), a)
                 };
-                a.prototype.drawPolygons =
+                svgRenderer.prototype.drawPolygons =
                 function (a) {
                     for (var b = [], c = 0, d = a.getPolygons(); c < d.length; c++) {
                         var e = this._addPolygonElement(d[c], a);
@@ -33943,10 +33959,10 @@ var SC;
                     }
                     return b
                 };
-                a.prototype.drawRectangle = function (a) {
+                svgRenderer.prototype.drawRectangle = function (a) {
                     return this._addRectangleElement(a.getPosition(), a.getSize(), a)
                 };
-                a.prototype.drawRectangles = function (a) {
+                svgRenderer.prototype.drawRectangles = function (a) {
                     for (var b = [], c = 0, d = a.getRectangles(); c < d.length; c++) {
                         var e = d[c];
                         e = this._addRectangleElement(e.position, e.size, a);
@@ -33954,10 +33970,10 @@ var SC;
                     }
                     return b
                 };
-                a.prototype.drawTextBox = function (a) {
+                svgRenderer.prototype.drawTextBox = function (a) {
                     return this._addTextBoxElement(a.getTextString(), a.getPosition(), a)
                 };
-                a.prototype.drawTextBoxes = function (a) {
+                svgRenderer.prototype.drawTextBoxes = function (a) {
                     for (var b = [], c = 0, d = a.getStrings(); c < d.length; c++) {
                         var e = d[c];
                         e = this._addTextBoxElement(e.text, e.position, a);
@@ -33965,7 +33981,7 @@ var SC;
                     }
                     return b
                 };
-                a.prototype._addTextBoxElement = function (a, b, d) {
+                svgRenderer.prototype._addTextBoxElement = function (a, b, d) {
                     var c = this.measureText(a, d.getTextPortion());
                     c.x += 2 * d.getPadding();
                     c.y += 2 * d.getPadding();
@@ -33979,7 +33995,7 @@ var SC;
                     f.push(a);
                     return f
                 };
-                a.prototype._renderEndcaps = function (a, b, f, e) {
+                svgRenderer.prototype._renderEndcaps = function (a, b, f, e) {
                     if (null === this._svgDefsElement)
                         throw new d.CommunicatorError("canvas not set");
                     f.getStartEndcapType() === d.Markup.Shape.EndcapType.Arrowhead ? (f.getEndcapsInverted() ? (a = g.Util.createEndArrowMarker(f.getStartEndcapSize(), f.getStartEndcapColor()), a.refX.baseVal.value = f.getStartEndcapSize()) : a = g.Util.createStartArrowMarker(f.getStartEndcapSize(), f.getStartEndcapColor()), e.style.markerStart = "url(#" + a.id + ")", this._svgDefsElement.appendChild(a)) :
@@ -33987,7 +34003,7 @@ var SC;
                     f.getEndEndcapType() === d.Markup.Shape.EndcapType.Arrowhead ? (a = f.getEndcapsInverted() ? g.Util.createStartArrowMarker(f.getEndEndcapSize(), f.getEndEndcapColor()) : g.Util.createEndArrowMarker(f.getEndEndcapSize(), f.getEndEndcapColor()), e.style.markerEnd = "url(#" + a.id + ")", this._svgDefsElement.appendChild(a)) : f.getEndEndcapType() ===
                     d.Markup.Shape.EndcapType.Circle && (a = g.Util.createCircleMarker(b, f.getStrokeWidth(), f.getEndEndcapSize(), f.getEndEndcapColor()), this._addSVGElement(a))
                 };
-                a.prototype._createTextElement = function (a, b, d) {
+                svgRenderer.prototype._createTextElement = function (a, b, d) {
                     var c = document.createElementNS(g.Util.svgNamespace, "text"),
                     f = 0;
                     for (a = a.split("\n"); f < a.length; f++) {
@@ -34007,27 +34023,27 @@ var SC;
                     this._setGenericStrokeAttributes(c, d);
                     return c
                 };
-                a.prototype._addTextElement = function (a, b, d) {
+                svgRenderer.prototype._addTextElement = function (a, b, d) {
                     a = this._createTextElement(a, b, d);
                     this._addSVGTextItemElement(a);
                     return a
                 };
-                a.prototype._addRectangleElement = function (a, b, d, e) {
+                svgRenderer.prototype._addRectangleElement = function (pos, size, rectangle, e) {
                     void 0 === e && (e = !1);
                     var c = document.createElementNS(g.Util.svgNamespace, "rect");
                     c.setAttributeNS(null, "x",
-                        a.x.toString());
-                    c.setAttributeNS(null, "y", a.y.toString());
-                    c.setAttributeNS(null, "width", b.x.toString());
-                    c.setAttributeNS(null, "height", b.y.toString());
-                    a = d.getBorderRadius();
-                    0 < a && (c.setAttributeNS(null, "rx", a.toString()), c.setAttributeNS(null, "ry", a.toString()));
-                    this._setGenericFillAttributes(c, d);
-                    this._setGenericStrokeAttributes(c, d);
+                        pos.x.toString());
+                    c.setAttributeNS(null, "y", pos.y.toString());
+                    c.setAttributeNS(null, "width", size.x.toString());
+                    c.setAttributeNS(null, "height", size.y.toString());
+                    pos = rectangle.getBorderRadius();
+                    0 < pos && (c.setAttributeNS(null, "rx", pos.toString()), c.setAttributeNS(null, "ry", pos.toString()));
+                    this._setGenericFillAttributes(c, rectangle);
+                    this._setGenericStrokeAttributes(c, rectangle);
                     e ? this._addSVGTextItemElement(c) : this._addSVGElement(c);
                     return c
                 };
-                a.prototype._addLineElement = function (a, b, d) {
+                svgRenderer.prototype._addLineElement = function (a, b, d) {
                     var c = document.createElementNS(g.Util.svgNamespace, "line");
                     c.setAttributeNS(null, "x1", a.x.toString());
                     c.setAttributeNS(null, "y1", a.y.toString());
@@ -34038,7 +34054,7 @@ var SC;
                     this._renderEndcaps(a, b, d, c);
                     return c
                 };
-                a.prototype._addPolygonElement = function (a, b) {
+                svgRenderer.prototype._addPolygonElement = function (a, b) {
                     a = g.Util.svgPointString(a);
                     var c = document.createElementNS(g.Util.svgNamespace, "polygon");
                     c.setAttributeNS(null, "points", a);
@@ -34048,7 +34064,7 @@ var SC;
                     this._addSVGElement(c);
                     return c
                 };
-                a.prototype._addPolylineElement = function (a, b) {
+                svgRenderer.prototype._addPolylineElement = function (a, b) {
                     var c = g.Util.svgPointString(a),
                     d = document.createElementNS(g.Util.svgNamespace, "polyline");
                     d.setAttributeNS(null, "points", c);
@@ -34058,7 +34074,7 @@ var SC;
                     this._addSVGElement(d);
                     return d
                 };
-                a.prototype._addCircleNode = function (a, b, d) {
+                svgRenderer.prototype._addCircleNode = function (a, b, d) {
                     var c = document.createElementNS(g.Util.svgNamespace, "circle");
                     c.setAttributeNS(null, "cx", a.x.toString());
                     c.setAttributeNS(null, "cy", a.y.toString());
@@ -34068,24 +34084,24 @@ var SC;
                     this._addSVGElement(c);
                     return c
                 };
-                a.prototype._setGenericFillAttributes = function (a, b) {
+                svgRenderer.prototype._setGenericFillAttributes = function (a, b) {
                     a.setAttributeNS(null, "fill", g.Util.svgColorRgbString(b.getFillColor()));
                     a.setAttributeNS(null, "fill-opacity", b.getFillOpacity().toString())
                 };
-                a.prototype._setGenericStrokeAttributes = function (a, b) {
+                svgRenderer.prototype._setGenericStrokeAttributes = function (a, b) {
                     a.setAttributeNS(null, "stroke", g.Util.svgColorRgbString(b.getStrokeColor()));
                     a.setAttributeNS(null, "stroke-width", b.getStrokeWidth().toString())
                 };
-                a.prototype._addSVGTextItemElement = function (a) {
+                svgRenderer.prototype._addSVGTextItemElement = function (a) {
                     this._svgTextElements.push(a)
                 };
-                a.prototype._addSVGElement = function (a) {
+                svgRenderer.prototype._addSVGElement = function (a) {
                     this._svgElements.push(a)
                 };
-                return a
+                return svgRenderer
             }
             ();
-            g.SVGMarkupRenderer = a
+            g.SVGMarkupRenderer = svgRenderer
         })(h.SVG || (h.SVG = {}))
     })(d.Internal || (d.Internal = {}))
 })(Communicator || (Communicator = {}));

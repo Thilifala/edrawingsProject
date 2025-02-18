@@ -1,4 +1,4 @@
-.dzq-panel{
+.dzq-panel {
     position: fixed;
     right: 0;
     bottom: 0;
@@ -8,7 +8,7 @@
     z-index: 100;
 }
 
-.dzq-markUp{
+.dzq-markUp {
     position: fixed;
     left: 900px;
     top: 100px;
@@ -19,7 +19,7 @@
     display: none;
 }
 
-.dzq-point{
+.dzq-point {
     position: fixed;
     left: 950px;
     top: 200px;
@@ -31,10 +31,79 @@
     background-color: red;
     display: none;
 }
-.dzq-canvas{
+
+.dzq-canvas {
     position: fixed;
     left: 900px;
     top: 100px;
     /* border: 1px solid red; */
     z-index: 100;
 }
+
+.dzqPoint{
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: #000000;
+    border-radius: 50%;
+    border: 1px solid #FFFFFF;
+}
+
+.dzqPoint.hide{
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    background: #FFFFFF;
+    border-radius: 100px 100px 100px 0px;
+    box-shadow: 0px 2px 4px 0px;
+    border: 0px;
+}
+
+.dzqRemark {
+    position: absolute;
+    font-size: 16px;
+    width: 302px;
+    height: 112px;
+    border: 1px solid #FFFFFF;
+    background: #FFFFFF;
+    border-radius: 16px 16px 16px 0px;
+    box-shadow: 0px 2px 8px 0px;
+
+    display: flex;
+    padding: 13px;
+}
+
+.dzqRemark .portraitContainer {
+    /* background: yellow; */
+}
+
+.dzqRemark .remarkInfoContainer {
+    /* background: blueviolet; */
+    padding: 4px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.dzqRemark .portrait {
+    width: 32px;
+    height: 32px;
+    background: red;
+    border-radius: 50%;
+}
+
+.dzqRemark .remarkInfoContainer .userName {
+    height: 22px;
+    font-weight: bold;
+    color: #212121;
+    line-height: 22px;
+}
+
+.dzqRemark .remarkInfoContainer .remarkTime {
+    height: 18px;
+    color: #666666;
+    font-size: 12px;
+    overflow: hidden;
+    word-break: break-all;
+}
+
