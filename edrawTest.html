@@ -3632,7 +3632,7 @@ define("eDwMeasureEntities", ["require", "exports", "eDwEventMgr", "eDwSelObj", 
                             }
                             return [7];
                         case 11:
-                            _c = eDwMeasureEntities.PointToPoint || this.updateSingleVert(iSelObjs) || this.updateSingleEdge(iSelObjs) || this.updateSingleFace(selPropsHC, iSelObjs) || this.updateVertEdge(selPropsHC, iSelObjs, ioAuxGeo);
+                            _c = eDwMeasureEntities.dzqDraw || eDwMeasureEntities.PointToPoint || this.updateSingleVert(iSelObjs) || this.updateSingleEdge(iSelObjs) || this.updateSingleFace(selPropsHC, iSelObjs) || this.updateVertEdge(selPropsHC, iSelObjs, ioAuxGeo);
                             if (_c) return [3, 13];
                             return [4, this.updateVertFace(selPropsHC, iSelObjs, ioAuxGeo)];
                         case 12:
@@ -4476,6 +4476,7 @@ define("eDwMeasureEntities", ["require", "exports", "eDwEventMgr", "eDwSelObj", 
             var label = new MeasureLabel(this.mViewer, iStart);
             label.addItem(iResult, iColor);
             this.mLabels.push(label)
+            console.log('dzq-add Result')
         };
         MeasureAuxMessage.prototype.addIfVertex = function (iVertSelObj) {
             if (!iVertSelObj.getPointEntity()) return;
@@ -4485,6 +4486,7 @@ define("eDwMeasureEntities", ["require", "exports", "eDwEventMgr", "eDwSelObj", 
             var coordHC = iVertSelObj.getLocalPoint() || pntHC;
             label.addItem(new MeasureResultPoint3D(cLocalizedCoordinate, coordHC));
             this.mLabels.push(label)
+            console.log('dzq-add Vertex')
         };
         MeasureAuxMessage.prototype.addIfCurve = function (iLineOrOtherHC, iEdgeSelObj, iLocalizeableEntityValue) {
             if (!iEdgeSelObj.getLineEntity()) return;
@@ -4492,6 +4494,7 @@ define("eDwMeasureEntities", ["require", "exports", "eDwEventMgr", "eDwSelObj", 
             label.addItem(new MeasureResultString(cLocalizedEntity, iLocalizeableEntityValue));
             label.addItem(new MeasureResultDistance(cLocalizedLength, iLineOrOtherHC.length));
             this.mLabels.push(label)
+            console.log('dzq-add Curve')
         };
         MeasureAuxMessage.prototype.addIfCircle = function (iCircleOrigHC, iEdgeSelObj) {
             if (!iEdgeSelObj.getLineEntity()) return;
@@ -4504,14 +4507,16 @@ define("eDwMeasureEntities", ["require", "exports", "eDwEventMgr", "eDwSelObj", 
             label.addItem(new MeasureResultArea(cLocalizedArea, circularArc.Area));
             label.addItem(new MeasureResultDistance(cLocalizedPerimeter, circularArc.Length));
             this.mLabels.push(label)
+            console.log('dzq-add Circle')
         };
         MeasureAuxMessage.prototype.addIfPlane = function (iFaceOrigHC, iFaceSelObj) {
             if (!iFaceSelObj.getFaceEntity()) return;
-            if (iFaceOrigHC instanceof eDwTypes_1.HC.SubentityProperties.PlaneElement) {
+            var dzqAddIfPlane = window.dzqTestPlugin.utils.onAddIfPlane(iFaceOrigHC, iFaceSelObj,eDwTypes_1)
+            if (dzqAddIfPlane  || iFaceOrigHC instanceof eDwTypes_1.HC.SubentityProperties.PlaneElement) {
                 var label = new MeasureLabel(this.mViewer, iFaceSelObj.getPosition());
                 label.addItem(new MeasureResultString(cLocalizedEntity, cLocalizedPlane));
                 this.mLabels.push(label)
-                // console.log('dzq-画容器')
+                console.log('dzq-add Plane')
             }
         };
         MeasureAuxMessage.prototype.addIfCylinder = function (iCylinderOrigHC, iFaceSelObj) {
@@ -4521,7 +4526,7 @@ define("eDwMeasureEntities", ["require", "exports", "eDwEventMgr", "eDwSelObj", 
                 label.addItem(new MeasureResultString(cLocalizedEntity, cLocalizedCylinder));
                 label.addItem(new MeasureResultDistance(cLocalizedDiameter, 2 * iCylinderOrigHC.radius));
                 this.mLabels.push(label)
-                // console.log('dzq-画线')
+                console.log('dzq-add Cylinder')
             }
         };
         MeasureAuxMessage.prototype.getLabels = function () {

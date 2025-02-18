@@ -335,6 +335,7 @@ define("dzqTestOperator", ["require", "exports", "eDwSelObj", "eDwBaseSelOperato
                     return __generator(this, (function (_a) {
                         switch (_a.label) {
                             case 0:
+                                eDwMeasureEntities.dzqDraw = true;
                                 return [4, dzqDrawPoint(this, mMeasureMrg, eDwMeasureEntities, iViewer, utils, pos2D, remarkInfo.id)];
                             case 1:
                                 var pointObj = _a.sent();
@@ -353,6 +354,7 @@ define("dzqTestOperator", ["require", "exports", "eDwSelObj", "eDwBaseSelOperato
                                 }
                                 return [4, dzqDrawRmkBox(pointObj, mMeasureMrg, rmkContent, remarkInfo.id)];
                             case 2:
+                                eDwMeasureEntities.dzqDraw = false;
                                 return [2];
                         }
                     }))
@@ -431,7 +433,7 @@ define("dzqTestOperator", ["require", "exports", "eDwSelObj", "eDwBaseSelOperato
             //还原点的位置
             function dzqDrawPoint(_this, mMeasureMrg, eDwMeasureEntities, iViewer, utils, rmkPosition, remarkInfoId) {
                 var pointObj; //todo:如何返回到上层
-                
+
                 return __awaiter(_this, void 0, void 0, (function () {
                     var idx, isAdded;
                     //一个mMeasureMrg只能画一个点
@@ -686,22 +688,25 @@ window.dzqTestPlugin = {
         //     var p2 = mLine.getP2()
         //     return false
         // }
+        onAddIfPlane: function (iFaceOrigHC, iFaceSelObj,eDwTypes_1) {
+            var dzqRemark = iFaceSelObj.remarkInfoId && !(iFaceOrigHC instanceof eDwTypes_1.HC.SubentityProperties.CylinderElement);
+            return dzqRemark
+        }
     },
     exposes: {
 
     }
 }
 
-
 $(document).ready(function () {
     var ele = $(' <div id="edrawings-button-dzq" class="edrawings-hud-button edrawings-hud-icon" title="Fullscreen" data-i18n-title="Strings.Fullscreen"></div>')
     $('.edrawings-hud-bar-content').append(ele)
 
 
-    $('.edrawings-tool-button').on('click',function(){
+    $('.edrawings-tool-button').on('click', function () {
         var btnId = $(this).prop('id');
         console.log(btnId)
-        if(btnId != 'edrawings-button-component-tree'){
+        if (btnId != 'edrawings-button-component-tree') {
             //dosomething
         }
     })
